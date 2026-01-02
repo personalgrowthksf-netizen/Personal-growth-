@@ -21,7 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (keyBuffer.endsWith(ADMIN_TRIGGER_CODE)) {
             keyBuffer = ""; // Reset
             console.log("Admin trigger detected!");
-            window.location.href = "admin.html";
+            // Use absolute path to avoid subfolder issues
+            window.location.href = "/admin.html";
         }
     });
 
