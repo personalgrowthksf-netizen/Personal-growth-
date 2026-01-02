@@ -1,0 +1,200 @@
+Build a Premium Guided Intelligence System for event attendees that feels powerful, helpful, and professional — NOT a fake chatbot.
+
+🧠 CORE CONCEPT (VERY IMPORTANT)
+
+❌ Do NOT build a free-text AI chatbot
+
+❌ Do NOT use OpenAI or any external API
+
+❌ Do NOT call this “AI Chat”
+
+✅ Build a Guided Personal Growth Intelligence System
+✅ Based fully on user profile + structured logic
+✅ Feels smart, premium, and actionable
+
+🖥️ UI / UX REQUIREMENTS
+
+Full-screen modern web interface
+
+Dark premium theme
+
+Colors inspired by the provided logo (deep blue, cyan highlights)
+
+Smooth animations
+
+Large readable text
+
+Mobile-first design
+
+Clean cards, not chat bubbles
+
+🔐 ACCESS SYSTEM (SECRET CODE)
+
+User lands on Secret Code Entry Page
+
+User enters a unique secret code
+
+Code can be used multiple times
+
+On first use:
+
+Ask for user details:
+
+Full Name
+
+Phone Number
+
+Age
+
+Current Status (Student / Job / Founder / Explorer)
+
+Area of Interest (Tech / Business / Creative / Other)
+
+Current Goal
+
+Save user data permanently
+
+On future logins with same code:
+
+Auto-load saved data
+
+Do NOT ask details again
+
+🛠️ ADMIN PANEL
+
+Admin login using fixed admin code: 786786
+
+Admin can:
+
+Add new users
+
+View all users
+
+See how many times a code is used
+
+See last login time
+
+Admin panel must be hidden unless admin code is entered
+
+📊 MAIN DASHBOARD (AFTER LOGIN)
+
+Title:
+“Your Personal Action Intelligence”
+
+Subtitle:
+“Clear guidance based on who you are and where you want to go.”
+
+Show 6 Interactive Action Cards:
+
+1️⃣ Your 30-Day Focus Plan
+2️⃣ Are You Ready for a Startup?
+3️⃣ Your Biggest Growth Block
+4️⃣ Skills You Must Build Next
+5️⃣ Mistakes to Avoid Right Now
+6️⃣ Your Next One Powerful Step
+
+🧠 HOW INTELLIGENCE WORKS (NO AI API)
+
+Each card must:
+
+Read user profile
+
+Apply rule-based deep logic
+
+Generate multi-section output
+
+Each response MUST include:
+
+🔍 Insight
+
+🎯 Clear recommendation
+
+🧭 Why this matters
+
+⏭️ Next action
+
+NO generic answers.
+
+🧾 EXAMPLE OUTPUT STYLE (IMPORTANT)
+
+Your 30-Day Focus Plan
+
+🔍 Insight
+Based on your age, interests, and current goal, your biggest advantage right now is time and learning speed.
+
+🎯 Recommendation
+Focus on building one real skill and one real connection every week.
+
+🧭 Why This Matters
+Scattered effort slows growth. Focus creates momentum.
+
+⏭️ Next Action
+Choose one skill today and block 60 minutes daily for it.
+
+🎨 CONTENT TONE
+
+Confident
+
+Motivational
+
+Clear
+
+No emojis overload
+
+No hype words
+
+Feels like a personal mentor
+
+🚫 STRICT RULES
+
+Do NOT say “AI says”
+
+Do NOT say “As an AI”
+
+Do NOT mention OpenAI or GPT
+
+Do NOT give vague advice
+
+Do NOT repeat same answers
+
+⚙️ TECH REQUIREMENTS
+
+Pure HTML, CSS, JavaScript
+
+LocalStorage for data persistence
+
+Fully working without internet
+
+Zero errors
+
+Clean modular code
+
+Commented logic
+
+🎯 FINAL RESULT SHOULD FEEL LIKE
+
+A paid premium tool
+
+A personal mentor
+
+Something people would pay extra for at an event
+
+Clear, useful, memorable
+
+🏁 BUILD EVERYTHING END-TO-END
+
+Login
+
+Code validation
+
+Profile storage
+
+Dashboard
+
+Logic engine
+
+Admin panel
+
+Responsive UI
+
+🔚 END OF PROMPT
