@@ -8,23 +8,25 @@
 </head>
 <body>
     <div class="screen-container">
+        <!-- Flow Intro -->
         <div id="questionIntroView" class="card">
             <h2 class="text-teal text-center">🎯 Understanding You</h2>
-            <p class="text-muted mb-2">We'll ask a few questions to build your custom path.</p>
+            <p class="text-muted mb-2">Answer a few short questions so we can recommend the most practical next steps for you.</p>
             <ul class="custom-list">
-                <li>Current Situation</li>
-                <li>Primary Goals</li>
-                <li>Risk Appetite</li>
-                <li>Skill Level</li>
+                <li>Your current situation</li>
+                <li>Your main goal</li>
+                <li>Your risk appetite</li>
+                <li>Your skill level</li>
             </ul>
             <button id="continueToFormBtn" class="btn btn-primary">➡️ Continue</button>
         </div>
 
+        <!-- Question Flow -->
         <div id="questionFlow" class="card hidden">
             <div class="progress-container">
                 <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
             </div>
-            <h2 id="qLabel" class="text-teal mb-2">Question</h2>
+            <h2 id="qLabel" class="text-teal mb-2" style="font-size: 1.25rem;">Question</h2>
             <div id="qInputContainer" class="form-group"></div>
             <button id="nextQBtn" class="btn btn-primary">Next Step</button>
         </div>

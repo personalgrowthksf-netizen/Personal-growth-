@@ -8,32 +8,38 @@
 </head>
 <body>
     <div id="mainContent" class="screen-container">
+        <!-- Access Code Entry Screen -->
         <div id="loginView" class="card">
             <h1 class="text-center text-teal">Career OS</h1>
             <p class="text-center text-muted mb-2">Unlock your personalized career roadmap.</p>
             <form id="loginForm">
                 <div class="form-group">
                     <label>Premium Access Code</label>
-                    <input type="text" id="accessCode" placeholder="KSF-XXXX-XXXX" required spellcheck="false">
+                    <input type="text" id="accessCode" placeholder="KSF-XXXX-XXXX" required spellcheck="false" autocomplete="off">
                     <p id="loginError" class="text-red hidden mt-1" style="font-size: 0.85rem;"></p>
                 </div>
-                <button type="submit" class="btn btn-primary">Unlock System</button>
+                <button type="submit" id="unlockBtn" class="btn btn-primary">Unlock System</button>
             </form>
         </div>
 
+        <!-- Access Verified Screen -->
         <div id="accessVerifiedView" class="card hidden">
             <h2 class="text-teal text-center">Access Verified</h2>
             <p class="text-muted text-center mb-2">Welcome to your Personal Growth system.</p>
-            <ul class="custom-list">
-                <li>Personalized Action Plan</li>
-                <li>30 & 90 Day Milestones</li>
-                <li>Mistakes to Avoid</li>
-            </ul>
+            <div class="info-section mb-2">
+                <p class="mb-1"><strong>What you'll get:</strong></p>
+                <ul class="custom-list">
+                    <li>Personalized Action Plan</li>
+                    <li>30 & 90 Day Milestones</li>
+                    <li>Mistakes to Avoid</li>
+                </ul>
+            </div>
             <button id="startAssessmentBtn" class="btn btn-primary">➡️ Start Assessment</button>
+            <p class="text-center mt-1"><small class="text-muted">This access is valid for one session only.</small></p>
         </div>
     </div>
 
-    <!-- Secret Admin (Unlocked via 786786) -->
+    <!-- Admin Access Section -->
     <div id="adminAccess" class="screen-container hidden">
         <div class="card">
             <h2 class="text-center">Admin Login</h2>
@@ -46,36 +52,43 @@
         </div>
     </div>
 
+    <!-- Admin Dashboard -->
     <div id="adminDashboard" class="screen-container hidden">
         <div class="card" style="max-width: 600px;">
-            <h3>Generate Access Code</h3>
-            <form id="generateCodeForm" class="mb-2">
-                <div class="form-group">
-                    <label>Attendee Name</label>
-                    <input type="text" id="attendeeName" placeholder="Full Name" required>
-                </div>
-                <div class="form-group">
-                    <label>WhatsApp Number (with country code)</label>
-                    <input type="tel" id="attendeePhone" placeholder="91XXXXXXXXXX" required>
-                </div>
-                <button type="submit" class="btn btn-secondary">Generate Code</button>
-            </form>
+            <div class="flex-between mb-2">
+                <h3>Admin Dashboard</h3>
+                <button onclick="location.reload()" class="btn btn-outline btn-sm" style="width: auto; padding: 5px 15px;">Logout</button>
+            </div>
+            
+            <div class="form-section mb-2">
+                <h4 class="mb-1">Generate Access Code</h4>
+                <form id="generateCodeForm">
+                    <div class="form-group">
+                        <input type="text" id="attendeeName" placeholder="Attendee Name" required class="mb-1">
+                        <input type="tel" id="attendeePhone" placeholder="WhatsApp (91XXXXXXXXXX)" required>
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Generate Code</button>
+                </form>
+            </div>
 
-            <div id="generatedResult" class="card mb-2 hidden" style="border: 2px solid var(--primary); background: #f0fdf4;">
-                <p class="text-center font-bold">Code Generated Successfully!</p>
+            <!-- WhatsApp Delivery Result -->
+            <div id="generatedResult" class="card mb-2 hidden" style="border: 2px solid #25D366; background: #f0fdf4; padding: 15px;">
+                <p class="text-center font-bold text-dark">Code Generated!</p>
                 <div id="displayCode" class="text-center text-teal font-bold" style="font-size: 1.5rem; margin: 10px 0; letter-spacing: 2px;"></div>
                 <a href="#" id="whatsappLink" target="_blank" class="btn" style="background-color: #25D366; color: white;">
-                    <span>📲 Send Code via WhatsApp</span>
+                    📲 Send Code via WhatsApp
                 </a>
             </div>
 
-            <div style="max-height: 200px; overflow-y: auto;">
-                <table style="width: 100%; border-collapse: collapse;">
-                    <thead><tr style="text-align: left; border-bottom: 1px solid #eee;"><th>Name</th><th>Code</th><th>Status</th></tr></thead>
-                    <tbody id="attendeesTableBody"></tbody>
-                </table>
+            <div class="table-section">
+                <h4 class="mb-1">Recent Attendees</h4>
+                <div style="max-height: 250px; overflow-y: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead><tr style="text-align: left; border-bottom: 1px solid #eee;"><th>Name</th><th>Code</th><th>Status</th></tr></thead>
+                        <tbody id="attendeesTableBody"></tbody>
+                    </table>
+                </div>
             </div>
-            <button onclick="location.reload()" class="btn btn-outline mt-2">Exit Admin</button>
         </div>
     </div>
 

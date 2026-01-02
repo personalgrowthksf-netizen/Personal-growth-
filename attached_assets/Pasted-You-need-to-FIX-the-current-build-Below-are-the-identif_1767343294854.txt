@@ -1,0 +1,85 @@
+You need to FIX the current build.
+Below are the identified errors, followed by the required changes.
+
+====================================================
+IDENTIFIED ERRORS / ISSUES
+====================================================
+
+1. WhatsApp delivery flow is MISSING
+   - Access codes are generated but not delivered via WhatsApp
+   - No wa.me deep link is implemented
+   - No “Send via WhatsApp” button exists
+
+2. Access code activation logic is INCOMPLETE
+   - Codes can be reused
+   - Code usage is not properly locked after first use
+
+3. Admin-to-user flow is BROKEN
+   - Admin generates a code but there is no controlled handoff
+   - User entry does not validate code state correctly
+
+4. User experience is NOT fully guided
+   - No full-screen transition after code entry
+   - Missing loading/analysis screen
+   - Navigation feels abrupt
+
+5. Error handling is WEAK
+   - Invalid codes do not always show clear messages
+   - Missing defensive checks for localStorage
+   - Page refresh can break the session
+
+====================================================
+REQUIRED CHANGES / FIXES
+====================================================
+
+1. Implement WhatsApp-based code delivery (MANDATORY)
+   - Add “Send Code via WhatsApp” button in admin panel
+   - Use wa.me deep link
+   - Auto-fill message with:
+     • Attendee name
+     • Unique one-time code
+   - WhatsApp must open with message pre-filled
+   - NO email, NO SMS
+
+2. Enforce one-time code usage
+   - Store code status as UNUSED / USED
+   - Mark code as USED immediately after successful login
+   - Block any reuse attempts permanently
+
+3. Fix admin → user access flow
+   - Admin generates code ONLY after payment
+   - User must enter code to access system
+   - Validate:
+     • Code exists
+     • Code is UNUSED
+   - Show clear error if invalid or used
+
+4. Improve guided full-screen UX
+   - Full-screen confirmation after valid code
+   - Step-by-step question flow
+   - Add loading/analysis screen
+   - Lock session after result
+
+5. Strengthen error handling
+   - Add null checks for all localStorage reads
+   - Handle refresh safely
+   - Prevent blank screens
+   - Ensure ZERO console errors
+
+====================================================
+TECH RULES (DO NOT BREAK)
+====================================================
+- HTML, CSS, Vanilla JavaScript ONLY
+- NO frameworks
+- NO backend
+- localStorage only
+- Clean, commented code
+
+====================================================
+FINAL INSTRUCTION
+====================================================
+Apply ALL fixes above.
+Integrate WhatsApp flow into the EXISTING system.
+Return the FULL corrected, working code.
+Do NOT explain.
+Do NOT summarize.

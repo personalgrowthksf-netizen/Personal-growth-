@@ -7,24 +7,28 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Analysis Loading Screen -->
     <div id="loadingOverlay" class="hidden">
         <div class="spinner"></div>
-        <p class="mt-2 text-teal font-bold">Generating Your Path...</p>
+        <p class="mt-2 text-teal font-bold">Analyzing Your Profile...</p>
+        <p class="text-muted">Generating personalized roadmap</p>
     </div>
 
     <div class="screen-container">
+        <!-- Result Intro -->
         <div id="resultIntroView" class="card">
             <h1 class="text-teal text-center">📊 Report Ready</h1>
-            <p class="text-muted text-center mb-2">Based on your inputs, we have generated your roadmap.</p>
+            <p class="text-muted text-center mb-2">Based on your inputs, here is the most suitable path for you at this stage.</p>
             <button id="showFullReportBtn" class="btn btn-primary">View My Report</button>
         </div>
 
-        <div id="reportView" class="card hidden" style="max-width: 500px;">
+        <!-- Full Report View -->
+        <div id="reportView" class="card hidden" style="max-width: 500px; padding: 25px;">
             <p id="userGreeting" class="text-muted text-center"></p>
             <h3 class="text-center mt-1">Recommended Path:</h3>
             <h2 id="pathTitle" class="text-teal text-center mb-1">...</h2>
             
-            <p id="pathDescription" class="mb-2"></p>
+            <p id="pathDescription" class="mb-2 text-center"></p>
             
             <div class="plan-section">
                 <h4 class="text-red">🗓️ 30-Day Focus</h4>
@@ -36,14 +40,22 @@
                 <ul id="list90Day" class="custom-list"></ul>
             </div>
 
-            <button id="finishSessionBtn" class="btn btn-primary mt-2">Finish & Lock Session</button>
+            <div class="mt-2 text-center p-1 bg-light rounded no-print">
+                <p class="text-teal font-bold mb-05">Success Principle:</p>
+                <p class="text-muted" style="font-size: 0.9rem;">Do the right things, in the right order.</p>
+            </div>
+
+            <button id="finishSessionBtn" class="btn btn-primary mt-2">Finish & Lock Access</button>
             <button onclick="window.print()" class="btn btn-outline mt-1 no-print">Print Report</button>
         </div>
 
+        <!-- Session End Screen -->
         <div id="sessionEndView" class="card hidden text-center">
-            <h2 class="text-teal">Access Locked</h2>
-            <p class="text-muted">Your session has ended and this code is now used.</p>
-            <a href="index.html" class="btn btn-outline mt-2">Back Home</a>
+            <div class="logo-placeholder" style="margin-bottom: 20px;"></div>
+            <h2 class="text-teal">Access Used</h2>
+            <p class="text-muted mb-2">This premium access is now locked to protect your personalization.</p>
+            <p class="text-muted mb-2">If you need further help, visit the startup fest help desk.</p>
+            <a href="index.html" class="btn btn-primary mt-2">Back Home</a>
         </div>
     </div>
     <script src="script.js"></script>

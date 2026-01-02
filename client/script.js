@@ -1,6 +1,6 @@
 /**
  * Personal Growth & Career OS - Core Logic
- * Clean, stable, vanilla JS.
+ * Fixes: WhatsApp Delivery, One-time usage, Session locking, Guided UI.
  */
 
 const CONFIG = {
@@ -12,12 +12,13 @@ const CONFIG = {
     ADMIN_TRIGGER: '786786'
 };
 
-// --- DEFENSIVE STORAGE UTILS ---
+// --- SAFE STORAGE WRAPPER ---
 const Storage = {
     get: (key) => {
         try {
             const data = localStorage.getItem(key);
-            return data ? JSON.parse(data) : null;
+            if (!data) return null;
+            return JSON.parse(data);
         } catch (e) {
             console.error("Storage Error:", e);
             return null;
@@ -33,17 +34,17 @@ const Storage = {
     remove: (key) => localStorage.removeItem(key)
 };
 
-// --- DATA HELPERS ---
+// --- CORE UTILS ---
 const getAttendees = () => Storage.get(CONFIG.STORAGE_KEYS.ATTENDEES) || [];
 const saveAttendees = (list) => Storage.set(CONFIG.STORAGE_KEYS.ATTENDEES, list);
 const getSession = () => Storage.get(CONFIG.STORAGE_KEYS.SESSION);
 const saveSession = (data) => Storage.set(CONFIG.STORAGE_KEYS.SESSION, data);
 
-// --- ROUTER & INIT ---
+// --- APP INITIALIZATION ---
 document.addEventListener('DOMContentLoaded', () => {
     const path = window.location.pathname;
     
-    // Secret Admin Trigger
+    // Global Keyboard Listener (Secret Admin Access)
     let buffer = "";
     document.addEventListener('keydown', (e) => {
         buffer = (buffer + e.key).slice(-10);
@@ -57,18 +58,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Page Specific Initialization
     if (path.includes('questions.html')) initQuestions();
     else if (path.includes('result.html')) initResult();
     else initIndex();
 });
 
-// --- 1) INDEX LOGIC ---
+// --- 1) INDEX LOGIC (Access Verification) ---
 function initIndex() {
     const form = document.getElementById('loginForm');
     const input = document.getElementById('accessCode');
     const error = document.getElementById('loginError');
-    const verifiedView = document.getElementById('accessVerifiedView');
     const loginView = document.getElementById('loginView');
+    const verifiedView = document.getElementById('accessVerifiedView');
+    const startBtn = document.getElementById('startAssessmentBtn');
 
     if (!form) return;
 
@@ -79,40 +82,44 @@ function initIndex() {
         const attendee = attendees.find(a => a.code.toUpperCase() === code);
 
         if (!attendee) {
-            showError("Invalid access code.");
+            showError("Invalid access code. Please check again.");
         } else if (attendee.used) {
             showError("This code has already been used.");
         } else {
+            // SUCCESS - Create temporary session
             saveSession({ code: attendee.code, name: attendee.name });
             loginView.classList.add('hidden');
             verifiedView.classList.remove('hidden');
         }
     });
 
-    document.getElementById('startAssessmentBtn')?.addEventListener('click', () => {
+    startBtn?.addEventListener('click', () => {
         window.location.href = 'questions.html';
     });
 
     function showError(msg) {
-        error.textContent = msg;
-        error.classList.remove('hidden');
+        if (error) {
+            error.textContent = msg;
+            error.classList.remove('hidden');
+        }
     }
 }
 
-// --- 2) QUESTIONS LOGIC ---
+// --- 2) QUESTIONS LOGIC (Guided Step-by-Step) ---
 function initQuestions() {
     const session = getSession();
-    if (!session) return window.location.href = 'index.html';
+    // Safety check: redirect to index if no valid session
+    if (!session || !session.code) return window.location.href = 'index.html';
 
     const questions = [
-        { id: 'status', label: 'Current Status', type: 'select', options: ['Student', 'Job Seeker', 'Working Professional', 'Founder'] },
-        { id: 'goal', label: 'Primary Goal', type: 'select', options: ['Get a Job', 'Build a Startup', 'Learn a New Skill', 'Not Sure Yet'] },
-        { id: 'risk', label: 'Risk Appetite', type: 'select', options: ['Low (Stability)', 'Medium (Calculated)', 'High (All In)'] },
-        { id: 'skill', label: 'Skill Level', type: 'select', options: ['Beginner', 'Intermediate', 'Advanced'] },
-        { id: 'challenge', label: 'Biggest Challenge', type: 'textarea' }
+        { id: 'status', label: 'What is your current status?', type: 'select', options: ['Student', 'Job Seeker', 'Working Professional', 'Founder'] },
+        { id: 'goal', label: 'What is your primary goal?', type: 'select', options: ['Get a Job', 'Build a Startup', 'Learn a New Skill', 'Not Sure Yet'] },
+        { id: 'risk', label: 'Your risk appetite?', type: 'select', options: ['Low (Prefer Stability)', 'Medium (Calculated Risks)', 'High (All In)'] },
+        { id: 'skill', label: 'Current skill level?', type: 'select', options: ['Beginner', 'Intermediate', 'Advanced'] },
+        { id: 'challenge', label: 'Biggest challenge right now?', type: 'textarea' }
     ];
 
-    let currentIdx = -1; // -1 is intro
+    let currentIdx = -1; // -1 = Intro screen
     const answers = { name: session.name };
 
     const intro = document.getElementById('questionIntroView');
@@ -120,7 +127,7 @@ function initQuestions() {
     const qLabel = document.getElementById('qLabel');
     const qInputContainer = document.getElementById('qInputContainer');
     const nextBtn = document.getElementById('nextQBtn');
-    const progress = document.getElementById('progressFill');
+    const progressFill = document.getElementById('progressFill');
 
     document.getElementById('continueToFormBtn')?.addEventListener('click', () => {
         intro.classList.add('hidden');
@@ -130,7 +137,7 @@ function initQuestions() {
 
     nextBtn?.addEventListener('click', () => {
         const input = qInputContainer.querySelector('input, select, textarea');
-        if (!input?.value) return alert("Please answer before continuing.");
+        if (!input?.value) return alert("Please provide an answer before continuing.");
         
         answers[questions[currentIdx].id] = input.value;
         showNext();
@@ -139,9 +146,11 @@ function initQuestions() {
     function showNext() {
         currentIdx++;
         if (currentIdx >= questions.length) {
+            // Assessment Complete
             session.answers = answers;
             saveSession(session);
-            return window.location.href = 'result.html';
+            window.location.href = 'result.html';
+            return;
         }
 
         const q = questions[currentIdx];
@@ -151,144 +160,150 @@ function initQuestions() {
         let el;
         if (q.type === 'select') {
             el = document.createElement('select');
-            el.innerHTML = '<option value="" disabled selected>Select...</option>' + 
+            el.innerHTML = '<option value="" disabled selected>Choose an option...</option>' + 
                           q.options.map(o => `<option value="${o}">${o}</option>`).join('');
         } else {
             el = document.createElement('textarea');
             el.rows = 4;
-            el.placeholder = "Tell us more...";
+            el.placeholder = "Explain briefly...";
         }
         qInputContainer.appendChild(el);
-        progress.style.width = `${(currentIdx / questions.length) * 100}%`;
+        if (progressFill) progressFill.style.width = `${((currentIdx + 1) / questions.length) * 100}%`;
     }
 }
 
-// --- 3) RESULT LOGIC ---
+// --- 3) RESULT LOGIC (Report Generation & Session Lock) ---
 function initResult() {
     const session = getSession();
     if (!session || !session.answers) return window.location.href = 'index.html';
 
-    const reportView = document.getElementById('reportView');
     const introView = document.getElementById('resultIntroView');
+    const reportView = document.getElementById('reportView');
     const loading = document.getElementById('loadingOverlay');
+    const finishBtn = document.getElementById('finishSessionBtn');
 
     document.getElementById('showFullReportBtn')?.addEventListener('click', () => {
         introView.classList.add('hidden');
         loading.classList.remove('hidden');
         
+        // Simulate "Analyzing" UX
         setTimeout(() => {
             loading.classList.add('hidden');
             reportView.classList.remove('hidden');
-            generateReport(session.answers);
-        }, 1500);
+            renderReport(session.answers);
+        }, 1800);
     });
 
-    document.getElementById('finishSessionBtn')?.addEventListener('click', () => {
+    finishBtn?.addEventListener('click', () => {
+        // PERMANENT LOCK: Mark as used in storage
         const attendees = getAttendees();
         const idx = attendees.findIndex(a => a.code === session.code);
         if (idx > -1) {
             attendees[idx].used = true;
             saveAttendees(attendees);
         }
+        
+        // Clear active session
         Storage.remove(CONFIG.STORAGE_KEYS.SESSION);
-        document.getElementById('reportView').classList.add('hidden');
-        document.getElementById('sessionEndView').classList.remove('hidden');
+        
+        reportView.classList.add('hidden');
+        document.getElementById('sessionEndView')?.classList.remove('hidden');
     });
 
-    function generateReport(ans) {
-        document.getElementById('userGreeting').textContent = `Prepared for ${ans.name}`;
+    function renderReport(ans) {
+        const greeting = document.getElementById('userGreeting');
+        if (greeting) greeting.textContent = `Personal Direction for ${ans.name}`;
         
-        let path = "Exploration Path";
-        let desc = "You are currently in a discovery phase.";
-        let steps30 = ["Audit interests", "Talk to 3 mentors"];
-        let steps90 = ["Pick one project", "Commit to 3 months"];
+        // Path Logic Engine
+        let path = "Exploration & Growth";
+        let desc = "You are in a valuable stage of discovery. Your focus is finding the right intersection of your skills and passion.";
+        let s30 = ["Audit your daily interests", "Talk to 3 people in target roles", "Read 'Design Your Life'"];
+        let s90 = ["Pick one 3-month project", "Join a peer group", "Build a small portfolio"];
 
         if (ans.goal.includes("Startup")) {
             path = "Startup Fast Track";
-            desc = "You have the drive to build. Focus on validation first.";
-            steps30 = ["Talk to 20 customers", "Build landing page"];
-            steps90 = ["Launch MVP", "Get first sale"];
+            desc = "You have the drive to build something big. Focus on rapid validation before building.";
+            s30 = ["Talk to 20 potential users", "Build a no-code prototype", "Validate core assumption"];
+            s90 = ["Launch public beta", "Iterate on feedback", "Get first paying user"];
         } else if (ans.goal.includes("Job")) {
-            path = "Career Accelerator";
-            desc = "Focus on proof of work and networking.";
-            steps30 = ["Update portfolio", "Connect with 5 recruiters"];
-            steps90 = ["Land 3 interviews", "Secure offer"];
+            path = "Career Acceleration";
+            desc = "Focus on visibility, authority, and specialized networking to skip the standard queue.";
+            s30 = ["Optimize LinkedIn for keywords", "Write 2 case studies", "Reach out to 5 target founders"];
+            s90 = ["Secure 3 high-tier interviews", "Negotiate value-based pay", "Mentor a junior"];
         }
 
         document.getElementById('pathTitle').textContent = path;
         document.getElementById('pathDescription').textContent = desc;
-        renderList('list30Day', steps30);
-        renderList('list90Day', steps90);
-    }
-
-    function renderList(id, items) {
-        const el = document.getElementById(id);
-        el.innerHTML = items.map(i => `<li>${i}</li>`).join('');
+        
+        const r30 = document.getElementById('list30Day');
+        const r90 = document.getElementById('list90Day');
+        if (r30) r30.innerHTML = s30.map(i => `<li>${i}</li>`).join('');
+        if (r90) r90.innerHTML = s90.map(i => `<li>${i}</li>`).join('');
     }
 }
 
-// --- ADMIN LOGIC ---
+// --- 4) ADMIN LOGIC (WhatsApp Flow) ---
 function initAdmin() {
-    const form = document.getElementById('adminLoginForm');
-    form?.addEventListener('submit', (e) => {
+    const loginForm = document.getElementById('adminLoginForm');
+    const dashboard = document.getElementById('adminDashboard');
+    const accessView = document.getElementById('adminAccess');
+
+    loginForm?.addEventListener('submit', (e) => {
         e.preventDefault();
-        if (document.getElementById('adminSecret').value === CONFIG.ADMIN_PASSWORD) {
-            document.getElementById('adminAccess').classList.add('hidden');
-            document.getElementById('adminDashboard').classList.remove('hidden');
-            renderAdmin();
+        const pw = document.getElementById('adminSecret')?.value;
+        if (pw === CONFIG.ADMIN_PASSWORD) {
+            accessView.classList.add('hidden');
+            dashboard.classList.remove('hidden');
+            renderAdminTable();
+        } else {
+            alert("Access Denied");
         }
     });
 
-    document.getElementById('generateCodeForm')?.addEventListener('submit', (e) => {
+    const genForm = document.getElementById('generateCodeForm');
+    genForm?.addEventListener('submit', (e) => {
         e.preventDefault();
         const name = document.getElementById('attendeeName').value.trim();
-        const phone = document.getElementById('attendeePhone').value.trim();
+        let phone = document.getElementById('attendeePhone').value.trim().replace(/\D/g, '');
 
-        if (!name || !phone) {
-            alert("Both name and phone number are required.");
-            return;
-        }
+        if (!name || phone.length < 10) return alert("Valid name and phone required.");
+        if (phone.length === 10) phone = "91" + phone;
 
-        // Basic phone validation (digits only, at least 10)
-        const cleanPhone = phone.replace(/\D/g, '');
-        if (cleanPhone.length < 10) {
-            alert("Please enter a valid WhatsApp number with country code (e.g., 91XXXXXXXXXX).");
-            return;
-        }
+        // Generate Code
+        const rand = () => Math.random().toString(36).substring(2,6).toUpperCase();
+        const code = `KSF-${rand()}-${rand()}`;
 
-        const code = `KSF-${Math.random().toString(36).substring(2,6).toUpperCase()}-${Math.random().toString(36).substring(2,6).toUpperCase()}`;
-        
-        const list = getAttendees();
-        const newAttendee = { name, phone: cleanPhone, code, used: false };
-        list.push(newAttendee);
-        saveAttendees(list);
-        
-        // Show WhatsApp delivery UI
-        const resultDiv = document.getElementById('generatedResult');
-        const codeDisplay = document.getElementById('displayCode');
+        // Save
+        const attendees = getAttendees();
+        attendees.push({ name, phone, code, used: false });
+        saveAttendees(attendees);
+
+        // Show WhatsApp UI
+        const resultView = document.getElementById('generatedResult');
+        const codeDisp = document.getElementById('displayCode');
         const waLink = document.getElementById('whatsappLink');
 
-        if (resultDiv && codeDisplay && waLink) {
-            codeDisplay.textContent = code;
-            
-            const message = `Hi ${name},\nThank you for upgrading at Kerala Startup Fest.\n\nYour Premium Access Code:\n${code}\n\nUse this code to unlock your Personal Growth & Career OS.`;
-            waLink.href = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
-            resultDiv.classList.remove('hidden');
+        if (resultView && codeDisp && waLink) {
+            codeDisp.textContent = code;
+            const msg = `Hi ${name},\nThank you for upgrading at Kerala Startup Fest.\n\nYour Premium Access Code:\n${code}\n\nUse this code to unlock your Personal Growth & Career OS.`;
+            waLink.href = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+            resultView.classList.remove('hidden');
         }
 
-        renderAdmin();
-        document.getElementById('generateCodeForm').reset();
+        renderAdminTable();
+        genForm.reset();
     });
 }
 
-function renderAdmin() {
+function renderAdminTable() {
     const tbody = document.getElementById('attendeesTableBody');
     if (!tbody) return;
-    tbody.innerHTML = getAttendees().map(a => `
-        <tr>
-            <td>${a.name}</td>
-            <td>${a.code}</td>
-            <td>${a.used ? 'USED' : 'ACTIVE'}</td>
+    const attendees = getAttendees().reverse();
+    tbody.innerHTML = attendees.map(a => `
+        <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 10px 0;">${a.name}</td>
+            <td style="font-weight: bold; color: #009688;">${a.code}</td>
+            <td style="color: ${a.used ? '#E53935' : '#009688'};">${a.used ? 'USED' : 'UNUSED'}</td>
         </tr>
-    `).join('');
+    `).join('') || '<tr><td colspan="3" class="text-center">No data found</td></tr>';
 }
