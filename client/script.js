@@ -15,16 +15,26 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // Global keyboard listener for secret code
     document.addEventListener("keydown", (e) => {
-        // Prevent buffer from growing too large and check for code
         keyBuffer += e.key;
         if (keyBuffer.length > 20) keyBuffer = keyBuffer.substring(keyBuffer.length - 20);
         
         if (keyBuffer.endsWith(ADMIN_TRIGGER_CODE)) {
-            keyBuffer = ""; // Reset
+            keyBuffer = ""; 
             console.log("Admin trigger detected!");
-            // Use location.href with origin to ensure absolute redirection
-            const adminUrl = window.location.origin + "/admin.html";
-            window.location.href = adminUrl;
+            
+            // IF on index.html, just hide home and show admin login directly without redirect
+            const mainContent = document.getElementById("mainContent");
+            const adminAccess = document.getElementById("adminAccess");
+            
+            if (mainContent && adminAccess) {
+                mainContent.style.display = "none";
+                adminAccess.style.display = "block";
+                adminAccess.classList.remove("hidden");
+                // Initialize admin logic if it wasn't
+                initAdmin();
+            } else {
+                window.location.href = "/admin.html";
+            }
         }
     });
 
