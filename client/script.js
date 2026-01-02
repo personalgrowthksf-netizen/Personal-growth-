@@ -1,6 +1,5 @@
 /**
  * Personal Growth & Career OS - Core Logic
- * Fixes: WhatsApp Delivery, One-time usage, Session locking, Guided UI.
  */
 
 const CONFIG = {
@@ -58,13 +57,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Page Specific Initialization
     if (path.includes('questions.html')) initQuestions();
     else if (path.includes('result.html')) initResult();
     else initIndex();
 });
 
-// --- 1) INDEX LOGIC (Access Verification) ---
+// --- 1) INDEX LOGIC ---
 function initIndex() {
     const form = document.getElementById('loginForm');
     const input = document.getElementById('accessCode');
@@ -82,11 +80,10 @@ function initIndex() {
         const attendee = attendees.find(a => a.code.toUpperCase() === code);
 
         if (!attendee) {
-            showError("Invalid access code. Please check again.");
+            showError("Invalid access code.");
         } else if (attendee.used) {
             showError("This code has already been used.");
         } else {
-            // SUCCESS - Create temporary session
             saveSession({ code: attendee.code, name: attendee.name });
             loginView.classList.add('hidden');
             verifiedView.classList.remove('hidden');
@@ -105,10 +102,9 @@ function initIndex() {
     }
 }
 
-// --- 2) QUESTIONS LOGIC (Guided Step-by-Step) ---
+// --- 2) QUESTIONS LOGIC ---
 function initQuestions() {
     const session = getSession();
-    // Safety check: redirect to index if no valid session
     if (!session || !session.code) return window.location.href = 'index.html';
 
     const questions = [
@@ -119,7 +115,7 @@ function initQuestions() {
         { id: 'challenge', label: 'Biggest challenge right now?', type: 'textarea' }
     ];
 
-    let currentIdx = -1; // -1 = Intro screen
+    let currentIdx = -1;
     const answers = { name: session.name };
 
     const intro = document.getElementById('questionIntroView');
@@ -137,7 +133,7 @@ function initQuestions() {
 
     nextBtn?.addEventListener('click', () => {
         const input = qInputContainer.querySelector('input, select, textarea');
-        if (!input?.value) return alert("Please provide an answer before continuing.");
+        if (!input?.value) return alert("Please answer before continuing.");
         
         answers[questions[currentIdx].id] = input.value;
         showNext();
@@ -146,7 +142,6 @@ function initQuestions() {
     function showNext() {
         currentIdx++;
         if (currentIdx >= questions.length) {
-            // Assessment Complete
             session.answers = answers;
             saveSession(session);
             window.location.href = 'result.html';
@@ -160,7 +155,7 @@ function initQuestions() {
         let el;
         if (q.type === 'select') {
             el = document.createElement('select');
-            el.innerHTML = '<option value="" disabled selected>Choose an option...</option>' + 
+            el.innerHTML = '<option value="" disabled selected>Select...</option>' + 
                           q.options.map(o => `<option value="${o}">${o}</option>`).join('');
         } else {
             el = document.createElement('textarea');
@@ -172,7 +167,7 @@ function initQuestions() {
     }
 }
 
-// --- 3) RESULT LOGIC (Report Generation & Session Lock) ---
+// --- 3) RESULT LOGIC ---
 function initResult() {
     const session = getSession();
     if (!session || !session.answers) return window.location.href = 'index.html';
@@ -186,63 +181,52 @@ function initResult() {
         introView.classList.add('hidden');
         loading.classList.remove('hidden');
         
-        // Simulate "Analyzing" UX
         setTimeout(() => {
             loading.classList.add('hidden');
             reportView.classList.remove('hidden');
             renderReport(session.answers);
-        }, 1800);
+        }, 1500);
     });
 
     finishBtn?.addEventListener('click', () => {
-        // PERMANENT LOCK: Mark as used in storage
         const attendees = getAttendees();
         const idx = attendees.findIndex(a => a.code === session.code);
         if (idx > -1) {
             attendees[idx].used = true;
             saveAttendees(attendees);
         }
-        
-        // Clear active session
         Storage.remove(CONFIG.STORAGE_KEYS.SESSION);
-        
         reportView.classList.add('hidden');
         document.getElementById('sessionEndView')?.classList.remove('hidden');
     });
 
     function renderReport(ans) {
-        const greeting = document.getElementById('userGreeting');
-        if (greeting) greeting.textContent = `Personal Direction for ${ans.name}`;
-        
-        // Path Logic Engine
+        document.getElementById('userGreeting').textContent = `Prepared for ${ans.name}`;
         let path = "Exploration & Growth";
-        let desc = "You are in a valuable stage of discovery. Your focus is finding the right intersection of your skills and passion.";
-        let s30 = ["Audit your daily interests", "Talk to 3 people in target roles", "Read 'Design Your Life'"];
-        let s90 = ["Pick one 3-month project", "Join a peer group", "Build a small portfolio"];
+        let desc = "You are in discovery mode.";
+        let s30 = ["Audit interests", "Talk to 3 mentors"];
+        let s90 = ["Pick one project", "Commit to 3 months"];
 
         if (ans.goal.includes("Startup")) {
             path = "Startup Fast Track";
-            desc = "You have the drive to build something big. Focus on rapid validation before building.";
-            s30 = ["Talk to 20 potential users", "Build a no-code prototype", "Validate core assumption"];
-            s90 = ["Launch public beta", "Iterate on feedback", "Get first paying user"];
+            desc = "Focus on rapid validation.";
+            s30 = ["Talk to 20 users", "Build prototype"];
+            s90 = ["Launch beta", "Get first user"];
         } else if (ans.goal.includes("Job")) {
             path = "Career Acceleration";
-            desc = "Focus on visibility, authority, and specialized networking to skip the standard queue.";
-            s30 = ["Optimize LinkedIn for keywords", "Write 2 case studies", "Reach out to 5 target founders"];
-            s90 = ["Secure 3 high-tier interviews", "Negotiate value-based pay", "Mentor a junior"];
+            desc = "Focus on proof of work.";
+            s30 = ["Update portfolio", "Connect with recruiters"];
+            s90 = ["Secure interviews", "Land offer"];
         }
 
         document.getElementById('pathTitle').textContent = path;
         document.getElementById('pathDescription').textContent = desc;
-        
-        const r30 = document.getElementById('list30Day');
-        const r90 = document.getElementById('list90Day');
-        if (r30) r30.innerHTML = s30.map(i => `<li>${i}</li>`).join('');
-        if (r90) r90.innerHTML = s90.map(i => `<li>${i}</li>`).join('');
+        document.getElementById('list30Day').innerHTML = s30.map(i => `<li>${i}</li>`).join('');
+        document.getElementById('list90Day').innerHTML = s90.map(i => `<li>${i}</li>`).join('');
     }
 }
 
-// --- 4) ADMIN LOGIC (WhatsApp Flow) ---
+// --- 4) ADMIN LOGIC ---
 function initAdmin() {
     const loginForm = document.getElementById('adminLoginForm');
     const dashboard = document.getElementById('adminDashboard');
@@ -250,13 +234,10 @@ function initAdmin() {
 
     loginForm?.addEventListener('submit', (e) => {
         e.preventDefault();
-        const pw = document.getElementById('adminSecret')?.value;
-        if (pw === CONFIG.ADMIN_PASSWORD) {
+        if (document.getElementById('adminSecret')?.value === CONFIG.ADMIN_PASSWORD) {
             accessView.classList.add('hidden');
             dashboard.classList.remove('hidden');
             renderAdminTable();
-        } else {
-            alert("Access Denied");
         }
     });
 
@@ -269,16 +250,12 @@ function initAdmin() {
         if (!name || phone.length < 10) return alert("Valid name and phone required.");
         if (phone.length === 10) phone = "91" + phone;
 
-        // Generate Code
-        const rand = () => Math.random().toString(36).substring(2,6).toUpperCase();
-        const code = `KSF-${rand()}-${rand()}`;
+        const code = `KSF-${Math.random().toString(36).substring(2,6).toUpperCase()}-${Math.random().toString(36).substring(2,6).toUpperCase()}`;
 
-        // Save
         const attendees = getAttendees();
         attendees.push({ name, phone, code, used: false });
         saveAttendees(attendees);
 
-        // Show WhatsApp UI
         const resultView = document.getElementById('generatedResult');
         const codeDisp = document.getElementById('displayCode');
         const waLink = document.getElementById('whatsappLink');
@@ -298,12 +275,11 @@ function initAdmin() {
 function renderAdminTable() {
     const tbody = document.getElementById('attendeesTableBody');
     if (!tbody) return;
-    const attendees = getAttendees().reverse();
-    tbody.innerHTML = attendees.map(a => `
+    tbody.innerHTML = getAttendees().reverse().map(a => `
         <tr style="border-bottom: 1px solid #eee;">
             <td style="padding: 10px 0;">${a.name}</td>
             <td style="font-weight: bold; color: #009688;">${a.code}</td>
             <td style="color: ${a.used ? '#E53935' : '#009688'};">${a.used ? 'USED' : 'UNUSED'}</td>
         </tr>
-    `).join('') || '<tr><td colspan="3" class="text-center">No data found</td></tr>';
+    `).join('');
 }
