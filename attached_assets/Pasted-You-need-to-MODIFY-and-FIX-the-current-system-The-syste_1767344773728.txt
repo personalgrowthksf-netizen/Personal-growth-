@@ -1,0 +1,123 @@
+You need to MODIFY and FIX the current system.
+
+The system must support:
+1) A shared secret code usable by multiple users
+2) Remembering user data when the SAME user re-enters using the same code
+
+====================================================
+CURRENT PROBLEMS
+====================================================
+
+1. Access code is treated as one-time use
+   - Code gets locked after first use
+   - This blocks other users
+
+2. User data is NOT remembered
+   - If a user refreshes or re-enters, data is lost
+   - System restarts from beginning every time
+
+These behaviors are NOT acceptable.
+
+====================================================
+REQUIRED BEHAVIOR (IMPORTANT)
+====================================================
+
+A. SECRET CODE RULES
+- ONE shared secret access code
+- Can be used by MULTIPLE USERS
+- Code must NEVER be marked as USED
+- Code must NEVER expire automatically
+
+B. USER DATA REMEMBERING
+- If a user has already started the system
+- And they re-enter using the SAME code
+- Their previously entered answers must be:
+  • Retrieved
+  • Pre-filled
+  • Or resumed from last completed step
+
+====================================================
+HOW TO IDENTIFY A USER (NO BACKEND)
+====================================================
+
+Use a simple client-side identifier:
+- Ask user name on first screen OR
+- Generate a session ID and store it in localStorage
+
+Store user data like:
+{
+  code: "SHARED-CODE",
+  userId: "auto-generated-id",
+  answers: { ... },
+  lastStep: "questions / result"
+}
+
+====================================================
+REQUIRED CHANGES
+====================================================
+
+1. REMOVE one-time code logic
+- Delete USED / UNUSED status
+- Do not block reuse
+- Validate only that code matches
+
+2. ADD user session persistence
+- Save user answers immediately after each step
+- Save current progress step
+- On re-entry:
+  • Check if data exists
+  • Resume instead of restarting
+
+3. HANDLE MULTIPLE USERS SAFELY
+- Each user’s data must be stored separately
+- Same code can have multiple user sessions
+- Never overwrite another user’s data
+
+4. IMPROVE USER FLOW
+- After code entry:
+  • If existing session found → Resume screen
+  • If new user → Start fresh
+- Show message:
+  “Welcome back. Resume where you left off?”
+
+5. ERROR HANDLING
+- If localStorage is missing → start fresh
+- If data is corrupted → reset safely
+- No blank screens
+- No crashes
+- ZERO console errors
+
+====================================================
+WHAT TO KEEP (DO NOT REMOVE)
+====================================================
+
+- WhatsApp delivery flow (wa.me)
+- Admin panel
+- Full-screen guided UI
+- Question-based personalization
+- Result screen
+- Clean color theme
+- Mobile-first design
+
+====================================================
+TECH RULES
+====================================================
+
+- HTML, CSS, Vanilla JavaScript ONLY
+- NO backend
+- NO frameworks
+- localStorage only
+- Defensive coding everywhere
+
+====================================================
+FINAL INSTRUCTION
+====================================================
+
+Combine:
+- Multiple-use secret code
+- Persistent user data
+- Resume functionality
+
+Return the FULL corrected, fully working code.
+Do NOT explain.
+Do NOT summarize.

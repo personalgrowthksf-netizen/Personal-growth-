@@ -14,12 +14,24 @@
             <p class="text-center text-muted mb-2">Unlock your personalized career roadmap.</p>
             <form id="loginForm">
                 <div class="form-group">
-                    <label>Premium Access Code</label>
-                    <input type="text" id="accessCode" placeholder="KSF-XXXX-XXXX" required spellcheck="false" autocomplete="off">
+                    <label>Your Name</label>
+                    <input type="text" id="userName" placeholder="Enter your full name" required autocomplete="name">
+                </div>
+                <div class="form-group">
+                    <label>Access Code</label>
+                    <input type="text" id="accessCode" placeholder="Enter shared code" required spellcheck="false" autocomplete="off">
                     <p id="loginError" class="text-red hidden mt-1" style="font-size: 0.85rem;"></p>
                 </div>
                 <button type="submit" id="unlockBtn" class="btn btn-primary">Unlock System</button>
             </form>
+        </div>
+
+        <!-- Resume Flow Screen -->
+        <div id="resumeView" class="card hidden">
+            <h2 class="text-teal text-center">Welcome Back, <span id="resumeName">User</span></h2>
+            <p class="text-muted text-center mb-2">We found your existing session. Would you like to resume where you left off?</p>
+            <button id="resumeBtn" class="btn btn-primary mb-1">✅ Resume Session</button>
+            <button id="startFreshBtn" class="btn btn-outline">🔄 Start Fresh</button>
         </div>
 
         <!-- Access Verified Screen -->
@@ -35,7 +47,6 @@
                 </ul>
             </div>
             <button id="startAssessmentBtn" class="btn btn-primary">➡️ Start Assessment</button>
-            <p class="text-center mt-1"><small class="text-muted">This access is valid for one session only.</small></p>
         </div>
     </div>
 
@@ -61,19 +72,26 @@
             </div>
             
             <div class="form-section mb-2">
-                <h4 class="mb-1">Generate Access Code</h4>
+                <h4 class="mb-1">Shared Access Code</h4>
+                <form id="configForm" class="flex-between gap-1">
+                    <input type="text" id="currentSharedCode" required style="flex: 1;">
+                    <button type="submit" class="btn btn-secondary" style="width: auto;">Update</button>
+                </form>
+            </div>
+
+            <div class="form-section mb-2">
+                <h4 class="mb-1">Deliver Code to Attendee</h4>
                 <form id="generateCodeForm">
                     <div class="form-group">
                         <input type="text" id="attendeeName" placeholder="Attendee Name" required class="mb-1">
                         <input type="tel" id="attendeePhone" placeholder="WhatsApp (91XXXXXXXXXX)" required>
                     </div>
-                    <button type="submit" class="btn btn-secondary">Generate Code</button>
+                    <button type="submit" class="btn btn-primary">Send via WhatsApp</button>
                 </form>
             </div>
 
-            <!-- WhatsApp Delivery Result -->
             <div id="generatedResult" class="card mb-2 hidden" style="border: 2px solid #25D366; background: #f0fdf4; padding: 15px;">
-                <p class="text-center font-bold text-dark">Code Generated!</p>
+                <p class="text-center font-bold text-dark">Ready to Send!</p>
                 <div id="displayCode" class="text-center text-teal font-bold" style="font-size: 1.5rem; margin: 10px 0; letter-spacing: 2px;"></div>
                 <a href="#" id="whatsappLink" target="_blank" class="btn" style="background-color: #25D366; color: white;">
                     📲 Send Code via WhatsApp
@@ -81,10 +99,10 @@
             </div>
 
             <div class="table-section">
-                <h4 class="mb-1">Recent Attendees</h4>
-                <div style="max-height: 250px; overflow-y: auto;">
+                <h4 class="mb-1">Active User Sessions</h4>
+                <div style="max-height: 200px; overflow-y: auto;">
                     <table style="width: 100%; border-collapse: collapse;">
-                        <thead><tr style="text-align: left; border-bottom: 1px solid #eee;"><th>Name</th><th>Code</th><th>Status</th></tr></thead>
+                        <thead><tr style="text-align: left; border-bottom: 1px solid #eee;"><th>Name</th><th>Progress</th><th>Status</th></tr></thead>
                         <tbody id="attendeesTableBody"></tbody>
                     </table>
                 </div>
