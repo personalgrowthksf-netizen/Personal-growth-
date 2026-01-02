@@ -2,60 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Your Report - Career OS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report - Career OS</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-gray">
-    <!-- Analysis Loading Screen -->
-    <div id="loadingOverlay" class="hidden">
-        <div class="spinner"></div>
-        <p class="mt-2 text-teal font-bold">Analyzing Your Profile...</p>
-        <p class="text-muted">Generating personalized roadmap</p>
-    </div>
-
     <div class="screen-container">
-        <!-- Result Intro -->
-        <div id="resultIntroView" class="card">
-            <h1 class="text-teal text-center">📊 Report Ready</h1>
-            <p class="text-muted text-center mb-2">Based on your inputs, here is the most suitable path for you at this stage.</p>
-            <button id="showFullReportBtn" class="btn btn-primary">View My Report</button>
-        </div>
-
-        <!-- Full Report View -->
-        <div id="reportView" class="card hidden" style="max-width: 500px; padding: 25px;">
-            <p id="userGreeting" class="text-muted text-center"></p>
-            <h3 class="text-center mt-1">Recommended Path:</h3>
-            <h2 id="pathTitle" class="text-teal text-center mb-1">...</h2>
-            
-            <p id="pathDescription" class="mb-2 text-center"></p>
-            
-            <div class="plan-section">
-                <h4 class="text-red">🗓️ 30-Day Focus</h4>
+        <div id="reportView" class="card">
+            <h2 id="pathTitle" class="text-teal text-center">Path</h2>
+            <div class="mb-2">
+                <h4>30-Day Plan</h4>
                 <ul id="list30Day" class="custom-list"></ul>
             </div>
-
-            <div class="plan-section mt-1">
-                <h4 class="text-teal">🔭 90-Day Focus</h4>
+            <div class="mb-2">
+                <h4>90-Day Plan</h4>
                 <ul id="list90Day" class="custom-list"></ul>
             </div>
-
-            <div class="mt-2 text-center p-1 bg-light rounded no-print">
-                <p class="text-teal font-bold mb-05">Success Principle:</p>
-                <p class="text-muted" style="font-size: 0.9rem;">Do the right things, in the right order.</p>
+            <hr class="mb-2">
+            <h3>Ask Your Personal Growth Guide</h3>
+            <div id="chatBox" class="chat-container mb-1">
+                <div class="msg bot">Hello! Ask me anything about your career, skills, or startup ideas.</div>
             </div>
-
-            <button onclick="location.href='index.html'" class="btn btn-primary mt-2">Finish & Back Home</button>
-            <button onclick="window.print()" class="btn btn-outline mt-1 no-print">Print Report</button>
-        </div>
-
-        <!-- Session End Screen -->
-        <div id="sessionEndView" class="card hidden text-center">
-            <div class="logo-placeholder" style="margin-bottom: 20px;"></div>
-            <h2 class="text-teal">Access Used</h2>
-            <p class="text-muted mb-2">This premium access is now locked to protect your personalization.</p>
-            <p class="text-muted mb-2">If you need further help, visit the startup fest help desk.</p>
-            <a href="index.html" class="btn btn-primary mt-2">Back Home</a>
+            <div class="flex gap-1">
+                <input type="text" id="chatInput" placeholder="How do I grow?" style="flex:1;">
+                <button id="sendChatBtn" class="btn btn-primary" style="width:auto;">Send</button>
+            </div>
         </div>
     </div>
     <script src="script.js"></script>

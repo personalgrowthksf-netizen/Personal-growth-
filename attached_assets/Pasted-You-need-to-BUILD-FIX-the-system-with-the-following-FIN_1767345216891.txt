@@ -1,0 +1,150 @@
+You need to BUILD / FIX the system with the following FINAL REQUIREMENTS.
+
+DO NOT use any external AI API.
+DO NOT use OpenAI.
+ALL intelligence must be rule-based and built inside the website.
+
+====================================================
+CORE REQUIREMENTS (NON-NEGOTIABLE)
+====================================================
+
+1. EACH USER MUST GET A UNIQUE ACCESS CODE
+2. CODE MUST BE SENT VIA WHATSAPP TO THE USER’S PHONE
+3. NO API OF ANY KIND
+4. SYSTEM MUST REMEMBER USER DATA
+5. SAME USER CAN RE-ENTER USING THEIR CODE
+
+====================================================
+ACCESS CODE RULES
+====================================================
+
+- Admin generates a UNIQUE code per user
+- Code format example: KSF-XXXX-XXXX
+- Code is linked to:
+  • User name
+  • WhatsApp number
+- Code is NOT shared between users
+- Code can be reused ONLY by the SAME user
+- Different users must NEVER share codes
+
+====================================================
+WHATSAPP DELIVERY (MANDATORY)
+====================================================
+
+When admin generates a code:
+
+- Show “Send via WhatsApp” button
+- Use official wa.me deep link
+- Auto-fill message like:
+
+“Hi [Name],
+Thank you for upgrading at Kerala Startup Fest.
+
+Your Personal Access Code:
+[CODE]
+
+Use this code to unlock your Personal Growth & Career OS.”
+
+- WhatsApp must open with message pre-filled
+- Admin only clicks Send
+- NO email
+- NO SMS
+
+====================================================
+USER IDENTIFICATION & DATA MEMORY
+====================================================
+
+- Store user data under their UNIQUE code
+- When a user enters their code:
+  • If data exists → resume
+  • If not → start fresh
+- Store:
+  • Answers
+  • Progress step
+  • Result
+
+====================================================
+BUILT-IN “AI-LIKE” GUIDE (NO API)
+====================================================
+
+Create a feature called:
+“Your Personal Growth Guide”
+
+This guide must:
+- Use user’s stored data:
+  • Goal
+  • Skill level
+  • Risk appetite
+  • Challenge
+- Respond ONLY to:
+  • Career
+  • Skills
+  • Startup
+  • Job growth
+  • Personal development
+
+====================================================
+RULE-BASED INTELLIGENCE
+====================================================
+
+- Analyze user question keywords
+- Combine with user profile
+- Return pre-written smart responses
+
+Example:
+IF goal == Startup AND risk == Medium
+AND question includes “quit”:
+→ Advise validation before quitting
+
+Prepare at least:
+- 10 startup guidance responses
+- 10 job guidance responses
+- 10 skill-building responses
+- 10 mindset responses
+
+Responses must feel personalized and helpful.
+
+====================================================
+USER INTERFACE
+====================================================
+
+- Full-screen guided flow
+- After result screen → show “Ask Your Guide”
+- Chat-style UI
+- Input + Send button
+- Friendly welcome message
+
+====================================================
+ERROR HANDLING
+====================================================
+
+- If invalid code → show clear message
+- If wrong user tries another’s code → block
+- If localStorage missing → handle safely
+- No crashes
+- ZERO console errors
+
+====================================================
+TECH RULES
+====================================================
+
+- HTML, CSS, Vanilla JavaScript ONLY
+- NO frameworks
+- NO backend
+- localStorage only
+- Defensive coding
+
+====================================================
+FINAL INSTRUCTION
+====================================================
+
+Build the COMPLETE system as described.
+Ensure:
+- Unique code per user
+- WhatsApp delivery per user
+- Rule-based intelligent guidance
+- Data persistence per user
+
+Return FULL working code.
+Do NOT explain.
+Do NOT summarize.
