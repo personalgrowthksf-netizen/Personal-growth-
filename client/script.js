@@ -175,8 +175,18 @@ function initAdmin() {
     });
 
     function showDashboard() {
+        const loginSectionIntegrated = document.getElementById("adminAccess");
+        const dashboardSectionIntegrated = document.getElementById("adminDashboard");
+        
         // Ensure elements are found before manipulating
-        if (loginSection && dashboardSection) {
+        if (loginSectionIntegrated && dashboardSectionIntegrated) {
+            loginSectionIntegrated.classList.add("hidden");
+            loginSectionIntegrated.style.display = "none";
+            dashboardSectionIntegrated.classList.remove("hidden");
+            dashboardSectionIntegrated.style.display = "block";
+            renderAttendeesTable();
+        } else if (loginSection && dashboardSection) {
+            // Fallback for standalone admin.html
             loginSection.classList.add("hidden");
             loginSection.style.display = "none";
             dashboardSection.classList.remove("hidden");
