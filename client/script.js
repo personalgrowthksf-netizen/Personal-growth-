@@ -14,11 +14,13 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // Global keyboard listener for secret code
     document.addEventListener("keydown", (e) => {
+        // Prevent buffer from growing too large and check for code
         keyBuffer += e.key;
-        if (keyBuffer.length > 20) keyBuffer = keyBuffer.substring(1);
+        if (keyBuffer.length > 20) keyBuffer = keyBuffer.substring(keyBuffer.length - 20);
         
-        if (keyBuffer.includes(ADMIN_TRIGGER_CODE)) {
+        if (keyBuffer.endsWith(ADMIN_TRIGGER_CODE)) {
             keyBuffer = ""; // Reset
+            console.log("Admin trigger detected!");
             window.location.href = "admin.html";
         }
     });
