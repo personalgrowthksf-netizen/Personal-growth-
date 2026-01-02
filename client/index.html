@@ -50,10 +50,25 @@
         <div class="card" style="max-width: 600px;">
             <h3>Generate Access Code</h3>
             <form id="generateCodeForm" class="mb-2">
-                <input type="text" id="attendeeName" placeholder="Name" required class="mb-1">
-                <input type="text" id="attendeePhone" placeholder="Phone" required class="mb-1">
-                <button type="submit" class="btn btn-secondary">Generate</button>
+                <div class="form-group">
+                    <label>Attendee Name</label>
+                    <input type="text" id="attendeeName" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                    <label>WhatsApp Number (with country code)</label>
+                    <input type="tel" id="attendeePhone" placeholder="91XXXXXXXXXX" required>
+                </div>
+                <button type="submit" class="btn btn-secondary">Generate Code</button>
             </form>
+
+            <div id="generatedResult" class="card mb-2 hidden" style="border: 2px solid var(--primary); background: #f0fdf4;">
+                <p class="text-center font-bold">Code Generated Successfully!</p>
+                <div id="displayCode" class="text-center text-teal font-bold" style="font-size: 1.5rem; margin: 10px 0; letter-spacing: 2px;"></div>
+                <a href="#" id="whatsappLink" target="_blank" class="btn" style="background-color: #25D366; color: white;">
+                    <span>📲 Send Code via WhatsApp</span>
+                </a>
+            </div>
+
             <div style="max-height: 200px; overflow-y: auto;">
                 <table style="width: 100%; border-collapse: collapse;">
                     <thead><tr style="text-align: left; border-bottom: 1px solid #eee;"><th>Name</th><th>Code</th><th>Status</th></tr></thead>

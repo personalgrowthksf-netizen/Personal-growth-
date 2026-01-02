@@ -241,15 +241,43 @@ function initAdmin() {
 
     document.getElementById('generateCodeForm')?.addEventListener('submit', (e) => {
         e.preventDefault();
-        const name = document.getElementById('attendeeName').value;
-        const phone = document.getElementById('attendeePhone').value;
+        const name = document.getElementById('attendeeName').value.trim();
+        const phone = document.getElementById('attendeePhone').value.trim();
+
+        if (!name || !phone) {
+            alert("Both name and phone number are required.");
+            return;
+        }
+
+        // Basic phone validation (digits only, at least 10)
+        const cleanPhone = phone.replace(/\D/g, '');
+        if (cleanPhone.length < 10) {
+            alert("Please enter a valid WhatsApp number with country code (e.g., 91XXXXXXXXXX).");
+            return;
+        }
+
         const code = `KSF-${Math.random().toString(36).substring(2,6).toUpperCase()}-${Math.random().toString(36).substring(2,6).toUpperCase()}`;
         
         const list = getAttendees();
-        list.push({ name, phone, code, used: false });
+        const newAttendee = { name, phone: cleanPhone, code, used: false };
+        list.push(newAttendee);
         saveAttendees(list);
+        
+        // Show WhatsApp delivery UI
+        const resultDiv = document.getElementById('generatedResult');
+        const codeDisplay = document.getElementById('displayCode');
+        const waLink = document.getElementById('whatsappLink');
+
+        if (resultDiv && codeDisplay && waLink) {
+            codeDisplay.textContent = code;
+            
+            const message = `Hi ${name},\nThank you for upgrading at Kerala Startup Fest.\n\nYour Premium Access Code:\n${code}\n\nUse this code to unlock your Personal Growth & Career OS.`;
+            waLink.href = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+            resultDiv.classList.remove('hidden');
+        }
+
         renderAdmin();
-        alert(`Generated: ${code}`);
+        document.getElementById('generateCodeForm').reset();
     });
 }
 
