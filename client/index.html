@@ -13,7 +13,7 @@
         <h1 class="text-dark">Personal Growth & Career OS</h1>
         <h2 class="text-teal subtitle">Premium Access</h2>
 
-        <div class="card mt-2">
+        <div id="loginView" class="card mt-2">
             <p class="mb-1">Enter your unique access code to unlock the system.</p>
             
             <form id="loginForm">
@@ -24,6 +24,36 @@
                 
                 <button type="submit" class="btn btn-teal">Unlock System</button>
             </form>
+        </div>
+
+        <div id="accessVerifiedView" class="hidden">
+            <div class="card mt-2 text-left">
+                <h2 class="text-teal text-center mb-1">Welcome to Your Personal Growth & Career OS</h2>
+                <p class="text-muted text-center mb-2">This system is designed to give you clarity, direction, and a practical action plan — not generic advice.</p>
+                
+                <div class="info-section">
+                    <h3 class="text-dark mb-1">🧠 What You’ll Get Inside</h3>
+                    <ul class="custom-list">
+                        <li>A clear understanding of where you stand right now</li>
+                        <li>The best path based on your goals, skills, and risk level</li>
+                        <li>A 30-day and 90-day focused plan</li>
+                        <li>Common mistakes to avoid at your current stage</li>
+                    </ul>
+                </div>
+
+                <div class="alert-box mt-2">
+                    <p class="text-center">This experience is personalized and takes less than 3 minutes.</p>
+                </div>
+
+                <div class="mt-2">
+                    <h3 class="text-dark mb-1">⏱️ Before You Begin</h3>
+                    <p class="text-muted mb-1">Please answer honestly. There are no right or wrong answers — only what fits you.</p>
+                    <p class="text-muted mb-1">Your responses are used only to generate your personal direction report.</p>
+                </div>
+
+                <button id="startAssessmentBtn" class="btn btn-teal mt-2">➡️ Start My Personal Direction Assessment</button>
+                <p class="text-center mt-1"><small class="text-muted">This access is valid for one session only.</small></p>
+            </div>
         </div>
         
         <div class="footer mt-3">
@@ -53,7 +83,6 @@
                 <h2 class="text-teal">Admin Dashboard</h2>
                 <button id="logoutBtn" class="btn btn-sm btn-outline">Logout</button>
             </header>
-            <!-- ... same content as admin.html but integrated here for reliability ... -->
             <div class="card mb-2">
                 <h3 class="text-dark mb-1">Generate Premium Code</h3>
                 <form id="generateCodeForm">

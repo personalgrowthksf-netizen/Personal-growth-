@@ -68,6 +68,9 @@ function saveAttendees(attendees) {
 function initIndex() {
     const form = document.getElementById("loginForm");
     const errorMsg = document.getElementById("loginError");
+    const loginView = document.getElementById("loginView");
+    const verifiedView = document.getElementById("accessVerifiedView");
+    const startBtn = document.getElementById("startAssessmentBtn");
 
     if (!form) return;
 
@@ -77,35 +80,37 @@ function initIndex() {
         const attendees = getAttendees();
         
         console.log("Checking code:", inputCode);
-        console.log("Available attendees:", attendees);
         
         // Find attendee by code
         const attendee = attendees.find(a => a.code.toUpperCase() === inputCode);
 
         if (attendee) {
             if (attendee.used) {
-                // Code already used logic
-                // NOTE: Project requirement says "Cannot be used ONLY once" -> "used=false" initially.
-                // "Each access code... Can be used ONLY once" -> After result, we mark used.
-                // However, for UX, if they crash, maybe allow re-entry?
-                // Requirement says "Cannot be reused". Let's enforce strictness.
                 errorMsg.textContent = "This code has already been used.";
                 errorMsg.classList.remove("hidden");
             } else {
                 // SUCCESS
-                // Save current session for questions page
                 localStorage.setItem(STORAGE_KEY_CURRENT_SESSION, JSON.stringify({
                     code: attendee.code,
                     name: attendee.name,
                     phone: attendee.phone
                 }));
-                window.location.href = "questions.html";
+                
+                // Show verified view
+                loginView.classList.add("hidden");
+                verifiedView.classList.remove("hidden");
             }
         } else {
             errorMsg.textContent = "Invalid access code. Please check again.";
             errorMsg.classList.remove("hidden");
         }
     });
+
+    if (startBtn) {
+        startBtn.addEventListener("click", () => {
+            window.location.href = "questions.html";
+        });
+    }
 }
 
 // ====================================================
@@ -267,6 +272,17 @@ function initQuestions() {
         return;
     }
 
+    const introView = document.getElementById("questionIntroView");
+    const formView = document.getElementById("formView");
+    const continueBtn = document.getElementById("continueToFormBtn");
+
+    if (continueBtn) {
+        continueBtn.addEventListener("click", () => {
+            introView.classList.add("hidden");
+            formView.classList.remove("hidden");
+        });
+    }
+
     // Prefill Name if available
     const nameInput = document.getElementById("userName");
     if (nameInput && session.name) {
@@ -308,6 +324,29 @@ function initResult() {
     if (!session || !session.code || !session.answers) {
         window.location.href = "index.html";
         return;
+    }
+
+    const introView = document.getElementById("resultIntroView");
+    const reportView = document.getElementById("reportView");
+    const showReportBtn = document.getElementById("showFullReportBtn");
+    const finishBtn = document.getElementById("finishSessionBtn");
+    const endView = document.getElementById("sessionEndView");
+
+    if (showReportBtn) {
+        showReportBtn.addEventListener("click", () => {
+            introView.classList.add("hidden");
+            reportView.classList.remove("hidden");
+        });
+    }
+
+    if (finishBtn) {
+        finishBtn.addEventListener("click", () => {
+            // Mark as used when they click exit
+            markCodeAsUsed(session.code);
+            reportView.classList.add("hidden");
+            endView.classList.remove("hidden");
+            localStorage.removeItem(STORAGE_KEY_CURRENT_SESSION);
+        });
     }
 
     const { goal, risk, skill, name } = session.answers;
@@ -439,14 +478,6 @@ function initResult() {
     });
 
     document.getElementById("mistakeToAvoid").textContent = mistake;
-
-    // FINAL STEP: Mark code as USED in database
-    // "Mark access code as USED... Lock further access"
-    markCodeAsUsed(session.code);
-    
-    // Clear session so back button doesn't work easily (simple protection)
-    // We keep it briefly to allow printing, but maybe clear on exit or reload
-    // For now, the "used" flag in DB prevents re-login.
 }
 
 function markCodeAsUsed(code) {

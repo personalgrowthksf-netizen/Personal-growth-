@@ -7,43 +7,68 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-gray">
-    <div class="container fade-in">
-        <h1 class="text-center text-teal mb-1">Your Personal Direction</h1>
-        <p class="text-center text-muted mb-2" id="userGreeting"></p>
-
-        <!-- Result Card -->
-        <div class="card result-card">
-            <h2 id="pathTitle" class="text-blue text-center mb-1">Loading...</h2>
-            <p id="pathDescription" class="text-center mb-2">Analyzing your profile...</p>
-
-            <hr class="divider">
-
-            <div class="plan-section">
-                <h3 class="text-red">30-Day Focus</h3>
-                <ul id="list30Day" class="custom-list">
-                    <!-- JS Populated -->
-                </ul>
-            </div>
-
-            <div class="plan-section mt-2">
-                <h3 class="text-teal">90-Day Focus</h3>
-                <ul id="list90Day" class="custom-list">
-                    <!-- JS Populated -->
-                </ul>
-            </div>
-
-            <div class="alert-box mt-2">
-                <strong class="text-red">⚠️ One Mistake to Avoid:</strong>
-                <p id="mistakeToAvoid" class="mt-05"></p>
+    <div id="resultContainer" class="container fade-in">
+        <div id="resultIntroView">
+            <h1 class="text-center text-teal mb-1">📊 Your Personal Direction Report</h1>
+            <div class="card mb-2">
+                <p class="text-center mb-1">Based on your inputs, here is the most suitable path for you at this stage of your journey.</p>
+                <p class="text-center text-muted">This is not a final destination — it’s a starting point with clarity.</p>
+                <button id="showFullReportBtn" class="btn btn-teal mt-2 w-100">View My Report</button>
             </div>
         </div>
 
-        <div class="text-center mt-3">
-            <button onclick="window.print()" class="btn btn-outline">Save this Plan</button>
-            <a href="index.html" class="btn btn-dark mt-1 d-block">Exit</a>
+        <div id="reportView" class="hidden">
+            <h1 class="text-center text-teal mb-1">Your Personal Direction</h1>
+            <p class="text-center text-muted mb-2" id="userGreeting"></p>
+
+            <div class="card result-card">
+                <h3 class="text-muted text-center mb-05">Recommended Path:</h3>
+                <h2 id="pathTitle" class="text-blue text-center mb-1">Loading...</h2>
+                
+                <div class="mt-1 mb-2">
+                    <p class="text-dark font-bold mb-05">Why This Path Fits You:</p>
+                    <p id="pathDescription" class="text-left">Analyzing your profile...</p>
+                </div>
+
+                <hr class="divider">
+
+                <div class="plan-section">
+                    <h3 class="text-red">🗓️ Your 30-Day Focus</h3>
+                    <ul id="list30Day" class="custom-list"></ul>
+                </div>
+
+                <div class="plan-section mt-2">
+                    <h3 class="text-teal">🔭 Your 90-Day Focus</h3>
+                    <ul id="list90Day" class="custom-list"></ul>
+                </div>
+
+                <div class="alert-box mt-2">
+                    <strong class="text-red">⚠️ One Mistake to Avoid:</strong>
+                    <p id="mistakeToAvoid" class="mt-05"></p>
+                </div>
+
+                <div class="mt-2 p-1 bg-light rounded text-center">
+                    <p class="text-teal font-bold">You don’t need to do everything.</p>
+                    <p class="text-dark">You only need to do the right things, in the right order.</p>
+                </div>
+            </div>
+
+            <div class="text-center mt-3 no-print">
+                <button onclick="window.print()" class="btn btn-outline">Save this Plan</button>
+                <button id="finishSessionBtn" class="btn btn-dark mt-1 d-block w-100">Exit & Lock Access</button>
+            </div>
+        </div>
+
+        <div id="sessionEndView" class="hidden">
+            <div class="card text-center">
+                <div class="logo-placeholder"></div>
+                <h2 class="text-teal mb-1">Access Used Successfully</h2>
+                <p class="mb-2">This premium access has now been locked to protect personalization.</p>
+                <p class="text-muted">If you need further guidance, please contact the Kerala Startup Fest help desk.</p>
+                <a href="index.html" class="btn btn-teal mt-2 w-100">Back to Home</a>
+            </div>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>

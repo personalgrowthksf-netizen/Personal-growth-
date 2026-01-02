@@ -1,0 +1,105 @@
+🌟 USER ENTRY EXPERIENCE (AFTER VALID CODE)
+🔓 Access Verified Screen
+
+Title:
+Welcome to Your Personal Growth & Career OS
+
+Subtitle:
+This system is designed to give you clarity, direction, and a practical action plan — not generic advice.
+
+🧠 What You’ll Get Inside
+
+A clear understanding of where you stand right now
+
+The best path based on your goals, skills, and risk level
+
+A 30-day and 90-day focused plan
+
+Common mistakes to avoid at your current stage
+
+This experience is personalized and takes less than 3 minutes.
+
+⏱️ Before You Begin
+
+Please answer honestly.
+There are no right or wrong answers — only what fits you.
+
+Your responses are used only to generate your personal direction report.
+
+🚀 Ready to Begin?
+
+Primary Button:
+➡️ Start My Personal Direction Assessment
+
+Note (small text):
+This access is valid for one session only.
+
+🧩 NEXT SCREEN – QUESTION FLOW INTRO
+🎯 Let’s Understand You Better
+
+Answer a few short questions so we can recommend the most practical next steps for you.
+
+This will cover:
+
+Your current situation
+
+Your main goal
+
+Your risk appetite
+
+Your skill level
+
+Your biggest challenge right now
+
+Button:
+➡️ Continue
+
+🧠 AFTER QUESTIONS – RESULT INTRO SCREEN
+📊 Your Personal Direction Report
+
+Based on your inputs, here is the most suitable path for you at this stage of your journey.
+
+This is not a final destination — it’s a starting point with clarity.
+
+🌱 RESULT OUTPUT STRUCTURE (TEXT)
+
+Recommended Path:
+(Example: Skill Foundation Path / Startup Fast Track / Job Acceleration Path)
+
+Why This Path Fits You:
+A short explanation in simple language.
+
+🗓️ Your 30-Day Focus
+
+Action 1
+
+Action 2
+
+Action 3
+
+🔭 Your 90-Day Focus
+
+Action 1
+
+Action 2
+
+Action 3
+
+⚠️ One Mistake to Avoid
+
+A practical warning relevant to their stage.
+
+✅ Final Message
+
+You don’t need to do everything.
+You only need to do the right things, in the right order.
+
+🔒 SESSION END MESSAGE
+
+Title:
+Access Used Successfully
+
+Message:
+This premium access has now been locked to protect personalization.
+
+If you need further guidance, please contact the Kerala Startup Fest help desk.
