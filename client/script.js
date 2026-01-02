@@ -1,14 +1,28 @@
 // ====================================================
 // GLOBAL CONFIG & UTILITIES
 // ====================================================
-const ADMIN_SECRET = "786786";
+const ADMIN_TRIGGER_CODE = "786786";
+const ADMIN_PASSWORD = "admin123";
 const STORAGE_KEY_ATTENDEES = "pgos_attendees";
 const STORAGE_KEY_CURRENT_SESSION = "pgos_current_user";
+
+let keyBuffer = "";
 
 document.addEventListener("DOMContentLoaded", () => {
     // Determine which page we are on and init accordingly
     const path = window.location.pathname;
     
+    // Global keyboard listener for secret code
+    document.addEventListener("keydown", (e) => {
+        keyBuffer += e.key;
+        if (keyBuffer.length > 20) keyBuffer = keyBuffer.substring(1);
+        
+        if (keyBuffer.includes(ADMIN_TRIGGER_CODE)) {
+            keyBuffer = ""; // Reset
+            window.location.href = "admin.html";
+        }
+    });
+
     if (path.includes("admin.html") || path.endsWith("/admin") || path.endsWith("/admin.html")) {
         initAdmin();
     } else if (path.includes("questions.html") || path.endsWith("/questions")) {
@@ -95,7 +109,7 @@ function initAdmin() {
             e.preventDefault();
             const secret = document.getElementById("adminSecret").value;
             
-            if (secret === ADMIN_SECRET) {
+            if (secret === ADMIN_PASSWORD) {
                 sessionStorage.setItem("admin_auth", "true");
                 showDashboard();
             } else {
