@@ -22,8 +22,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (keyBuffer.endsWith(ADMIN_TRIGGER_CODE)) {
             keyBuffer = ""; // Reset
             console.log("Admin trigger detected!");
-            // Use window.location.assign for more forced redirection
-            window.location.assign("/admin.html");
+            // Use location.href with origin to ensure absolute redirection
+            const adminUrl = window.location.origin + "/admin.html";
+            window.location.href = adminUrl;
         }
     });
 
