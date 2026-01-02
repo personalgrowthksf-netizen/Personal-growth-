@@ -1,492 +1,266 @@
-// ====================================================
-// GLOBAL CONFIG & UTILITIES
-// ====================================================
-const ADMIN_TRIGGER_CODE = "786786";
-const ADMIN_PASSWORD = "admin123";
-const STORAGE_KEY_ATTENDEES = "pgos_attendees";
-const STORAGE_KEY_CURRENT_SESSION = "pgos_current_user";
+/**
+ * Personal Growth & Career OS - Core Logic
+ * Clean, stable, vanilla JS.
+ */
 
-let keyBuffer = "";
+const CONFIG = {
+    STORAGE_KEYS: {
+        ATTENDEES: 'pgos_attendees',
+        SESSION: 'pgos_session',
+    },
+    ADMIN_PASSWORD: 'admin123',
+    ADMIN_TRIGGER: '786786'
+};
 
-document.addEventListener("DOMContentLoaded", () => {
-    // Determine which page we are on and init accordingly
+// --- DEFENSIVE STORAGE UTILS ---
+const Storage = {
+    get: (key) => {
+        try {
+            const data = localStorage.getItem(key);
+            return data ? JSON.parse(data) : null;
+        } catch (e) {
+            console.error("Storage Error:", e);
+            return null;
+        }
+    },
+    set: (key, value) => {
+        try {
+            localStorage.setItem(key, JSON.stringify(value));
+        } catch (e) {
+            console.error("Storage Save Error:", e);
+        }
+    },
+    remove: (key) => localStorage.removeItem(key)
+};
+
+// --- DATA HELPERS ---
+const getAttendees = () => Storage.get(CONFIG.STORAGE_KEYS.ATTENDEES) || [];
+const saveAttendees = (list) => Storage.set(CONFIG.STORAGE_KEYS.ATTENDEES, list);
+const getSession = () => Storage.get(CONFIG.STORAGE_KEYS.SESSION);
+const saveSession = (data) => Storage.set(CONFIG.STORAGE_KEYS.SESSION, data);
+
+// --- ROUTER & INIT ---
+document.addEventListener('DOMContentLoaded', () => {
     const path = window.location.pathname;
-    // Check if we're on the root or index.html
-    const isIndex = path === "/" || path === "/index.html" || path.endsWith("/") || path === "" || path.includes("index");
     
-    // Global keyboard listener for secret code
-    document.addEventListener("keydown", (e) => {
-        keyBuffer += e.key;
-        if (keyBuffer.length > 20) keyBuffer = keyBuffer.substring(keyBuffer.length - 20);
-        
-        if (keyBuffer.endsWith(ADMIN_TRIGGER_CODE)) {
-            keyBuffer = ""; 
-            console.log("Admin trigger detected!");
-            
-            // IF on index.html, just hide home and show admin login directly without redirect
-            const mainContent = document.getElementById("mainContent");
-            const adminAccess = document.getElementById("adminAccess");
-            
-            if (mainContent && adminAccess) {
-                mainContent.style.display = "none";
-                adminAccess.style.display = "block";
-                adminAccess.classList.remove("hidden");
-                // Initialize admin logic if it wasn't
+    // Secret Admin Trigger
+    let buffer = "";
+    document.addEventListener('keydown', (e) => {
+        buffer = (buffer + e.key).slice(-10);
+        if (buffer.endsWith(CONFIG.ADMIN_TRIGGER)) {
+            const admin = document.getElementById('adminAccess');
+            if (admin) {
+                admin.classList.remove('hidden');
+                document.getElementById('mainContent')?.classList.add('hidden');
                 initAdmin();
-            } else {
-                window.location.href = "/admin.html";
             }
         }
     });
 
-    if (path.includes("admin.html") || path.endsWith("/admin") || path.endsWith("/admin.html")) {
-        initAdmin();
-    } else if (path.includes("questions.html") || path.endsWith("/questions")) {
-        initQuestions();
-    } else if (path.includes("result.html")) {
-        initResult();
-    } else if (isIndex) {
-        // Default to index (login) if no specific match
-        initIndex();
-    }
+    if (path.includes('questions.html')) initQuestions();
+    else if (path.includes('result.html')) initResult();
+    else initIndex();
 });
 
-// Helper to safely get data from localStorage
-function getAttendees() {
-    const data = localStorage.getItem(STORAGE_KEY_ATTENDEES);
-    return data ? JSON.parse(data) : [];
-}
-
-// Helper to save data
-function saveAttendees(attendees) {
-    localStorage.setItem(STORAGE_KEY_ATTENDEES, JSON.stringify(attendees));
-}
-
-// ====================================================
-// 1) INDEX.HTML - LOGIN LOGIC
-// ====================================================
+// --- 1) INDEX LOGIC ---
 function initIndex() {
-    const form = document.getElementById("loginForm");
-    const errorMsg = document.getElementById("loginError");
-    const loginView = document.getElementById("loginView");
-    const verifiedView = document.getElementById("accessVerifiedView");
-    const startBtn = document.getElementById("startAssessmentBtn");
+    const form = document.getElementById('loginForm');
+    const input = document.getElementById('accessCode');
+    const error = document.getElementById('loginError');
+    const verifiedView = document.getElementById('accessVerifiedView');
+    const loginView = document.getElementById('loginView');
 
     if (!form) return;
 
-    form.addEventListener("submit", (e) => {
+    form.addEventListener('submit', (e) => {
         e.preventDefault();
-        const inputCode = document.getElementById("accessCode").value.trim().toUpperCase();
+        const code = input.value.trim().toUpperCase();
         const attendees = getAttendees();
-        
-        console.log("Checking code:", inputCode);
-        
-        // Find attendee by code
-        const attendee = attendees.find(a => a.code.toUpperCase() === inputCode);
+        const attendee = attendees.find(a => a.code.toUpperCase() === code);
 
-        if (attendee) {
-            if (attendee.used) {
-                errorMsg.textContent = "This code has already been used.";
-                errorMsg.classList.remove("hidden");
-            } else {
-                // SUCCESS
-                localStorage.setItem(STORAGE_KEY_CURRENT_SESSION, JSON.stringify({
-                    code: attendee.code,
-                    name: attendee.name,
-                    phone: attendee.phone
-                }));
-                
-                // Show verified view
-                loginView.classList.add("hidden");
-                verifiedView.classList.remove("hidden");
-            }
+        if (!attendee) {
+            showError("Invalid access code.");
+        } else if (attendee.used) {
+            showError("This code has already been used.");
         } else {
-            errorMsg.textContent = "Invalid access code. Please check again.";
-            errorMsg.classList.remove("hidden");
+            saveSession({ code: attendee.code, name: attendee.name });
+            loginView.classList.add('hidden');
+            verifiedView.classList.remove('hidden');
         }
     });
 
-    if (startBtn) {
-        startBtn.addEventListener("click", () => {
-            window.location.href = "questions.html";
-        });
-    }
-}
-
-// ====================================================
-// 2) ADMIN.HTML - DASHBOARD LOGIC
-// ====================================================
-function initAdmin() {
-    const loginSection = document.getElementById("adminLoginSection");
-    const dashboardSection = document.getElementById("adminDashboard");
-    const loginForm = document.getElementById("adminLoginForm");
-    const generateForm = document.getElementById("generateCodeForm");
-    
-    // Check if already logged in (simple session check)
-    if (sessionStorage.getItem("admin_auth") === "true") {
-        showDashboard();
-    }
-
-    // Login Handler
-    if (loginForm) {
-        loginForm.addEventListener("submit", (e) => {
-            e.preventDefault();
-            const secret = document.getElementById("adminSecret").value;
-            
-            if (secret === ADMIN_PASSWORD) {
-                sessionStorage.setItem("admin_auth", "true");
-                showDashboard();
-            } else {
-                document.getElementById("adminLoginError").classList.remove("hidden");
-            }
-        });
-    }
-
-    // Generate Code Handler
-    if (generateForm) {
-        generateForm.addEventListener("submit", (e) => {
-            e.preventDefault();
-            const name = document.getElementById("attendeeName").value.trim();
-            const phone = document.getElementById("attendeePhone").value.trim();
-
-            if (name && phone) {
-                const newCode = generateUniqueCode();
-                
-                // Save to Storage
-                const newAttendee = {
-                    name: name,
-                    phone: phone,
-                    code: newCode,
-                    used: false,
-                    createdAt: new Date().toISOString()
-                };
-                
-                const attendees = getAttendees();
-                attendees.push(newAttendee);
-                saveAttendees(attendees);
-
-                // Show Result
-                displayGeneratedCode(newAttendee);
-                
-                // Refresh Table
-                renderAttendeesTable();
-                
-                // Reset Form
-                generateForm.reset();
-            }
-        });
-    }
-
-    // Logout
-    document.getElementById("logoutBtn")?.addEventListener("click", () => {
-        sessionStorage.removeItem("admin_auth");
-        window.location.reload();
+    document.getElementById('startAssessmentBtn')?.addEventListener('click', () => {
+        window.location.href = 'questions.html';
     });
 
-    function showDashboard() {
-        const loginSectionIntegrated = document.getElementById("adminAccess");
-        const dashboardSectionIntegrated = document.getElementById("adminDashboard");
-        
-        // Ensure elements are found before manipulating
-        if (loginSectionIntegrated && dashboardSectionIntegrated) {
-            loginSectionIntegrated.classList.add("hidden");
-            loginSectionIntegrated.style.display = "none";
-            dashboardSectionIntegrated.classList.remove("hidden");
-            dashboardSectionIntegrated.style.display = "block";
-            renderAttendeesTable();
-        } else if (loginSection && dashboardSection) {
-            // Fallback for standalone admin.html
-            loginSection.classList.add("hidden");
-            loginSection.style.display = "none";
-            dashboardSection.classList.remove("hidden");
-            dashboardSection.style.display = "block";
-            renderAttendeesTable();
-        }
-    }
-
-    function generateUniqueCode() {
-        // Format: KSF-XXXX-XXXX
-        const randPart = () => Math.random().toString(36).substring(2, 6).toUpperCase();
-        return `KSF-${randPart()}-${randPart()}`;
-    }
-
-    function displayGeneratedCode(attendee) {
-        const resultDiv = document.getElementById("generatedResult");
-        const codeDisplay = document.getElementById("displayCode");
-        const waLink = document.getElementById("whatsappLink");
-
-        resultDiv.classList.remove("hidden");
-        codeDisplay.textContent = attendee.code;
-
-        // WhatsApp URL construction
-        const message = `Hi ${attendee.name},\nThank you for upgrading at Kerala Startup Fest.\n\nYour Premium Access Code:\n${attendee.code}\n\nUse this code to unlock your Personal Growth & Career OS.`;
-        const encodedMsg = encodeURIComponent(message);
-        
-        // WhatsApp API format: https://wa.me/PHONE?text=MESSAGE
-        // Phone number needs to be clean (no + or spaces usually, but API handles some)
-        // Ensure '91' prefix is there if not typed
-        let cleanPhone = attendee.phone.replace(/\D/g, ''); 
-        // If user entered 10 digits, prepend 91 (assuming India context from "Kerala Startup Fest")
-        if (cleanPhone.length === 10) cleanPhone = "91" + cleanPhone;
-
-        waLink.href = `https://wa.me/${cleanPhone}?text=${encodedMsg}`;
-    }
-
-    function renderAttendeesTable() {
-        const tbody = document.getElementById("attendeesTableBody");
-        const attendees = getAttendees().reverse(); // Show newest first
-        
-        tbody.innerHTML = "";
-        
-        if (attendees.length === 0) {
-            tbody.innerHTML = "<tr><td colspan='4' class='text-center'>No codes generated yet.</td></tr>";
-            return;
-        }
-
-        attendees.forEach(a => {
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-                <td>${a.name}</td>
-                <td>${a.phone}</td>
-                <td class="text-teal font-bold">${a.code}</td>
-                <td>
-                    <span class="${a.used ? 'text-red' : 'text-teal'}">
-                        ${a.used ? 'USED' : 'UNUSED'}
-                    </span>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
+    function showError(msg) {
+        error.textContent = msg;
+        error.classList.remove('hidden');
     }
 }
 
-// ====================================================
-// 3) QUESTIONS.HTML - ASSESSMENT LOGIC
-// ====================================================
+// --- 2) QUESTIONS LOGIC ---
 function initQuestions() {
-    const session = JSON.parse(localStorage.getItem(STORAGE_KEY_CURRENT_SESSION));
-    
-    // Security Check: Must have a session from login
-    if (!session || !session.code) {
-        window.location.href = "index.html";
-        return;
-    }
+    const session = getSession();
+    if (!session) return window.location.href = 'index.html';
 
-    const introView = document.getElementById("questionIntroView");
-    const formView = document.getElementById("formView");
-    const continueBtn = document.getElementById("continueToFormBtn");
+    const questions = [
+        { id: 'status', label: 'Current Status', type: 'select', options: ['Student', 'Job Seeker', 'Working Professional', 'Founder'] },
+        { id: 'goal', label: 'Primary Goal', type: 'select', options: ['Get a Job', 'Build a Startup', 'Learn a New Skill', 'Not Sure Yet'] },
+        { id: 'risk', label: 'Risk Appetite', type: 'select', options: ['Low (Stability)', 'Medium (Calculated)', 'High (All In)'] },
+        { id: 'skill', label: 'Skill Level', type: 'select', options: ['Beginner', 'Intermediate', 'Advanced'] },
+        { id: 'challenge', label: 'Biggest Challenge', type: 'textarea' }
+    ];
 
-    if (continueBtn) {
-        continueBtn.addEventListener("click", () => {
-            introView.classList.add("hidden");
-            formView.classList.remove("hidden");
-        });
-    }
+    let currentIdx = -1; // -1 is intro
+    const answers = { name: session.name };
 
-    // Prefill Name if available
-    const nameInput = document.getElementById("userName");
-    if (nameInput && session.name) {
-        nameInput.value = session.name;
-    }
+    const intro = document.getElementById('questionIntroView');
+    const flow = document.getElementById('questionFlow');
+    const qLabel = document.getElementById('qLabel');
+    const qInputContainer = document.getElementById('qInputContainer');
+    const nextBtn = document.getElementById('nextQBtn');
+    const progress = document.getElementById('progressFill');
 
-    const form = document.getElementById("questionsForm");
-    if (form) {
-        form.addEventListener("submit", (e) => {
-            e.preventDefault();
-            
-            // Gather Answers
-            const answers = {
-                name: document.getElementById("userName").value,
-                status: document.getElementById("currentStatus").value,
-                goal: document.getElementById("primaryGoal").value,
-                risk: document.getElementById("riskAppetite").value,
-                skill: document.getElementById("skillLevel").value,
-                challenge: document.getElementById("challenge").value
-            };
+    document.getElementById('continueToFormBtn')?.addEventListener('click', () => {
+        intro.classList.add('hidden');
+        flow.classList.remove('hidden');
+        showNext();
+    });
 
-            // Save answers to session (temp)
+    nextBtn?.addEventListener('click', () => {
+        const input = qInputContainer.querySelector('input, select, textarea');
+        if (!input?.value) return alert("Please answer before continuing.");
+        
+        answers[questions[currentIdx].id] = input.value;
+        showNext();
+    });
+
+    function showNext() {
+        currentIdx++;
+        if (currentIdx >= questions.length) {
             session.answers = answers;
-            localStorage.setItem(STORAGE_KEY_CURRENT_SESSION, JSON.stringify(session));
+            saveSession(session);
+            return window.location.href = 'result.html';
+        }
 
-            // Redirect to result
-            window.location.href = "result.html";
-        });
+        const q = questions[currentIdx];
+        qLabel.textContent = q.label;
+        qInputContainer.innerHTML = '';
+        
+        let el;
+        if (q.type === 'select') {
+            el = document.createElement('select');
+            el.innerHTML = '<option value="" disabled selected>Select...</option>' + 
+                          q.options.map(o => `<option value="${o}">${o}</option>`).join('');
+        } else {
+            el = document.createElement('textarea');
+            el.rows = 4;
+            el.placeholder = "Tell us more...";
+        }
+        qInputContainer.appendChild(el);
+        progress.style.width = `${(currentIdx / questions.length) * 100}%`;
     }
 }
 
-// ====================================================
-// 4) RESULT.HTML - LOGIC ENGINE
-// ====================================================
+// --- 3) RESULT LOGIC ---
 function initResult() {
-    const session = JSON.parse(localStorage.getItem(STORAGE_KEY_CURRENT_SESSION));
-    
-    // Security Check
-    if (!session || !session.code || !session.answers) {
-        window.location.href = "index.html";
-        return;
-    }
+    const session = getSession();
+    if (!session || !session.answers) return window.location.href = 'index.html';
 
-    const introView = document.getElementById("resultIntroView");
-    const reportView = document.getElementById("reportView");
-    const showReportBtn = document.getElementById("showFullReportBtn");
-    const finishBtn = document.getElementById("finishSessionBtn");
-    const endView = document.getElementById("sessionEndView");
+    const reportView = document.getElementById('reportView');
+    const introView = document.getElementById('resultIntroView');
+    const loading = document.getElementById('loadingOverlay');
 
-    if (showReportBtn) {
-        showReportBtn.addEventListener("click", () => {
-            introView.classList.add("hidden");
-            reportView.classList.remove("hidden");
-        });
-    }
-
-    if (finishBtn) {
-        finishBtn.addEventListener("click", () => {
-            // Mark as used when they click exit
-            markCodeAsUsed(session.code);
-            reportView.classList.add("hidden");
-            endView.classList.remove("hidden");
-            localStorage.removeItem(STORAGE_KEY_CURRENT_SESSION);
-        });
-    }
-
-    const { goal, risk, skill, name } = session.answers;
-
-    // Greeting
-    document.getElementById("userGreeting").textContent = `Prepared for ${name}`;
-
-    // Logic Engine
-    let path = "";
-    let desc = "";
-    let focus30 = [];
-    let focus90 = [];
-    let mistake = "";
-
-    // LOGIC RULES
-    // IF goal == Startup AND risk == High
-    if (goal === "Startup" && risk === "High") {
-        path = "Startup Fast Track";
-        desc = "You have the ambition and risk appetite to build something big. Your focus is speed and validation.";
-        focus30 = [
-            "Identify a problem worth solving and talk to 20 potential customers.",
-            "Build a 'No-Code' MVP or prototype within 2 weeks.",
-            "Get your first paying customer (or Letter of Intent)."
-        ];
-        focus90 = [
-            "Launch V1 of your product to a wider audience.",
-            "Iterate based on feedback loop (Build-Measure-Learn).",
-            "Secure early-stage funding or reach profitability ramens."
-        ];
-        mistake = "Building a full product before validating that people actually want it.";
-    } 
-    // IF goal == Startup AND risk != High
-    else if (goal === "Startup" && risk !== "High") {
-        path = "Side-Hustle / Bootstrapper Path";
-        desc = "You want to build, but you prefer stability. The best path is to build while you earn.";
-        focus30 = [
-            "Allocate 2 hours daily for your startup idea (no excuses).",
-            "Validate your idea with zero budget.",
-            "Join a community of indie hackers or bootstrappers."
-        ];
-        focus90 = [
-            "Launch a micro-SaaS or service product.",
-            "Generate your first $1000 online.",
-            "Decide whether to go full-time based on revenue."
-        ];
-        mistake = "Quitting your job too early before you have revenue validation.";
-    }
-    // IF goal == Job AND skill == Beginner
-    else if (goal === "Job" && skill === "Beginner") {
-        path = "Skill Foundation Path";
-        desc = "Your focus must be on aggressive learning and building a proof of work.";
-        focus30 = [
-            "Pick ONE high-demand skill (e.g., Full Stack, Data, Sales) and stick to it.",
-            "Complete a capstone project that solves a real problem.",
-            "Update your LinkedIn profile to reflect your new learning journey."
-        ];
-        focus90 = [
-            "Build a portfolio with 3 solid projects.",
-            "Start networking with people in your target role.",
-            "Apply to 50+ entry-level roles or internships."
-        ];
-        mistake = "Tutorial hell: Watching videos without actually building anything.";
-    }
-    // IF goal == Job AND skill != Beginner
-    else if (goal === "Job" && skill !== "Beginner") {
-        path = "Career Acceleration Path";
-        desc = "You have the skills; now you need visibility, authority, and a better network.";
-        focus30 = [
-            "Optimize your resume and LinkedIn for specific high-value keywords.",
-            "Write one case study about a difficult problem you solved.",
-            "Reach out to 10 recruiters or founders directly."
-        ];
-        focus90 = [
-            "Secure interviews at Tier-1 companies.",
-            "Negotiate your salary based on value, not just market rate.",
-            "Mentor a junior to solidify your own understanding."
-        ];
-        mistake = "Waiting for job postings instead of networking directly with decision makers.";
-    }
-    // IF goal == Skill
-    else if (goal === "Skill") {
-        path = "Mastery Path";
-        desc = "Deep diving into a new competency to future-proof your career.";
-        focus30 = [
-            "Deconstruct the skill into sub-skills and create a learning roadmap.",
-            "Practice deliberately for 1 hour every single day.",
-            "Teach what you learn (blog, tweet, or explain to a friend)."
-        ];
-        focus90 = [
-            "Achieve a certification or public recognition for this skill.",
-            "Apply this skill in a real-world paid project.",
-            "Connect with top 5 experts in this field."
-        ];
-        mistake = "Learning broadly without depth. Jack of all trades, master of none.";
-    }
-    // IF goal == Not Sure (or fallback)
-    else {
-        path = "Exploration & Discovery Path";
-        desc = "It's okay not to know. Your goal is to run small experiments to find your Ikigai.";
-        focus30 = [
-            "Audit your interests: What do you do in your free time?",
-            "Talk to 5 people in different careers (Job, Startup, Freelance).",
-            "Read 'Design Your Life' or similar career clarity books."
-        ];
-        focus90 = [
-            "Try 3 different mini-projects (1 week each).",
-            "Eliminate what you definitely hate doing.",
-            "Commit to one path for the next 6 months."
-        ];
-        mistake = "Paralysis by analysis. Thinking too much instead of doing.";
-    }
-
-    // Render Data
-    document.getElementById("pathTitle").textContent = path;
-    document.getElementById("pathDescription").textContent = desc;
-    
-    const ul30 = document.getElementById("list30Day");
-    focus30.forEach(item => {
-        const li = document.createElement("li");
-        li.textContent = item;
-        ul30.appendChild(li);
+    document.getElementById('showFullReportBtn')?.addEventListener('click', () => {
+        introView.classList.add('hidden');
+        loading.classList.remove('hidden');
+        
+        setTimeout(() => {
+            loading.classList.add('hidden');
+            reportView.classList.remove('hidden');
+            generateReport(session.answers);
+        }, 1500);
     });
 
-    const ul90 = document.getElementById("list90Day");
-    focus90.forEach(item => {
-        const li = document.createElement("li");
-        li.textContent = item;
-        ul90.appendChild(li);
+    document.getElementById('finishSessionBtn')?.addEventListener('click', () => {
+        const attendees = getAttendees();
+        const idx = attendees.findIndex(a => a.code === session.code);
+        if (idx > -1) {
+            attendees[idx].used = true;
+            saveAttendees(attendees);
+        }
+        Storage.remove(CONFIG.STORAGE_KEYS.SESSION);
+        document.getElementById('reportView').classList.add('hidden');
+        document.getElementById('sessionEndView').classList.remove('hidden');
     });
 
-    document.getElementById("mistakeToAvoid").textContent = mistake;
+    function generateReport(ans) {
+        document.getElementById('userGreeting').textContent = `Prepared for ${ans.name}`;
+        
+        let path = "Exploration Path";
+        let desc = "You are currently in a discovery phase.";
+        let steps30 = ["Audit interests", "Talk to 3 mentors"];
+        let steps90 = ["Pick one project", "Commit to 3 months"];
+
+        if (ans.goal.includes("Startup")) {
+            path = "Startup Fast Track";
+            desc = "You have the drive to build. Focus on validation first.";
+            steps30 = ["Talk to 20 customers", "Build landing page"];
+            steps90 = ["Launch MVP", "Get first sale"];
+        } else if (ans.goal.includes("Job")) {
+            path = "Career Accelerator";
+            desc = "Focus on proof of work and networking.";
+            steps30 = ["Update portfolio", "Connect with 5 recruiters"];
+            steps90 = ["Land 3 interviews", "Secure offer"];
+        }
+
+        document.getElementById('pathTitle').textContent = path;
+        document.getElementById('pathDescription').textContent = desc;
+        renderList('list30Day', steps30);
+        renderList('list90Day', steps90);
+    }
+
+    function renderList(id, items) {
+        const el = document.getElementById(id);
+        el.innerHTML = items.map(i => `<li>${i}</li>`).join('');
+    }
 }
 
-function markCodeAsUsed(code) {
-    const attendees = getAttendees();
-    const index = attendees.findIndex(a => a.code === code);
-    
-    if (index !== -1 && !attendees[index].used) {
-        attendees[index].used = true;
-        saveAttendees(attendees);
-        console.log(`Code ${code} marked as used.`);
-    }
+// --- ADMIN LOGIC ---
+function initAdmin() {
+    const form = document.getElementById('adminLoginForm');
+    form?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (document.getElementById('adminSecret').value === CONFIG.ADMIN_PASSWORD) {
+            document.getElementById('adminAccess').classList.add('hidden');
+            document.getElementById('adminDashboard').classList.remove('hidden');
+            renderAdmin();
+        }
+    });
+
+    document.getElementById('generateCodeForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('attendeeName').value;
+        const phone = document.getElementById('attendeePhone').value;
+        const code = `KSF-${Math.random().toString(36).substring(2,6).toUpperCase()}-${Math.random().toString(36).substring(2,6).toUpperCase()}`;
+        
+        const list = getAttendees();
+        list.push({ name, phone, code, used: false });
+        saveAttendees(list);
+        renderAdmin();
+        alert(`Generated: ${code}`);
+    });
+}
+
+function renderAdmin() {
+    const tbody = document.getElementById('attendeesTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = getAttendees().map(a => `
+        <tr>
+            <td>${a.name}</td>
+            <td>${a.code}</td>
+            <td>${a.used ? 'USED' : 'ACTIVE'}</td>
+        </tr>
+    `).join('');
 }

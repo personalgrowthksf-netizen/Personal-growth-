@@ -2,81 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assessment - Personal Growth OS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Assessment - Career OS</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-gray">
-    <div class="container fade-in">
-        <div id="questionIntroView">
-            <h2 class="text-teal text-center mb-1">🎯 Let’s Understand You Better</h2>
-            <div class="card text-left">
-                <p class="mb-1">Answer a few short questions so we can recommend the most practical next steps for you.</p>
-                <p class="mb-1"><strong>This will cover:</strong></p>
-                <ul class="custom-list mb-2">
-                    <li>Your current situation</li>
-                    <li>Your main goal</li>
-                    <li>Your risk appetite</li>
-                    <li>Your skill level</li>
-                    <li>Your biggest challenge right now</li>
-                </ul>
-                <button id="continueToFormBtn" class="btn btn-teal">➡️ Continue</button>
-            </div>
+<body>
+    <div class="screen-container">
+        <div id="questionIntroView" class="card">
+            <h2 class="text-teal text-center">🎯 Understanding You</h2>
+            <p class="text-muted mb-2">We'll ask a few questions to build your custom path.</p>
+            <ul class="custom-list">
+                <li>Current Situation</li>
+                <li>Primary Goals</li>
+                <li>Risk Appetite</li>
+                <li>Skill Level</li>
+            </ul>
+            <button id="continueToFormBtn" class="btn btn-primary">➡️ Continue</button>
         </div>
 
-        <div id="formView" class="hidden">
-            <h2 class="text-teal text-center mb-2">Your Profile</h2>
-            <div class="card">
-                <form id="questionsForm">
-                    <div class="form-group">
-                        <label for="userName">Full Name</label>
-                        <input type="text" id="userName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="currentStatus">Current Status</label>
-                        <select id="currentStatus" required>
-                            <option value="" disabled selected>Select...</option>
-                            <option value="Student">Student</option>
-                            <option value="Job Seeker">Job Seeker</option>
-                            <option value="Working">Working Professional</option>
-                            <option value="Founder">Founder</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="primaryGoal">Primary Goal</label>
-                        <select id="primaryGoal" required>
-                            <option value="" disabled selected>Select...</option>
-                            <option value="Job">Get a Job / Better Job</option>
-                            <option value="Startup">Build a Startup</option>
-                            <option value="Skill">Learn a New Skill</option>
-                            <option value="Not Sure">Not Sure Yet</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="riskAppetite">Risk Appetite</label>
-                        <select id="riskAppetite" required>
-                            <option value="" disabled selected>Select...</option>
-                            <option value="Low">Low (Prefer Stability)</option>
-                            <option value="Medium">Medium (Calculated Risks)</option>
-                            <option value="High">High (All In)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="skillLevel">Current Skill Level</label>
-                        <select id="skillLevel" required>
-                            <option value="" disabled selected>Select...</option>
-                            <option value="Beginner">Beginner</option>
-                            <option value="Intermediate">Intermediate</option>
-                            <option value="Advanced">Advanced</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="challenge">Biggest Challenge Right Now</label>
-                        <textarea id="challenge" rows="3" placeholder="What's holding you back?" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-teal w-100">Generate My Direction</button>
-                </form>
+        <div id="questionFlow" class="card hidden">
+            <div class="progress-container">
+                <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
             </div>
+            <h2 id="qLabel" class="text-teal mb-2">Question</h2>
+            <div id="qInputContainer" class="form-group"></div>
+            <button id="nextQBtn" class="btn btn-primary">Next Step</button>
         </div>
     </div>
     <script src="script.js"></script>

@@ -2,241 +2,173 @@
    BRANDING & COLOR THEME
    Primary Teal: #009688
    Secondary Red: #E53935
-   Accent Yellow: #FBC02D
-   Accent Blue: #3F51B5
-   Dark Text: #1E1E1E
    Background: #FFFFFF
+   Text: #1E1E1E
    ========================================= */
 
 :root {
-    --primary-teal: #009688;
-    --secondary-red: #E53935;
-    --accent-yellow: #FBC02D;
-    --accent-blue: #3F51B5;
-    --dark-text: #1E1E1E;
-    --light-bg: #F5F5F5;
-    --white: #FFFFFF;
-    --shadow: 0 4px 6px rgba(0,0,0,0.1);
-    --radius: 8px;
+    --primary: #009688;
+    --secondary: #E53935;
+    --bg: #FFFFFF;
+    --text: #1E1E1E;
+    --light-gray: #F5F5F5;
+    --border: #EEEEEE;
+    --radius: 12px;
+    --shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 body {
-    background-color: var(--light-bg);
-    color: var(--dark-text);
+    background-color: var(--bg);
+    color: var(--text);
     line-height: 1.6;
+    height: 100vh;
+    overflow: hidden;
 }
 
-/* UTILITIES */
-.bg-gray { background-color: var(--light-bg); }
-.text-teal { color: var(--primary-teal); }
-.text-red { color: var(--secondary-red); }
-.text-blue { color: var(--accent-blue); }
-.text-dark { color: var(--dark-text); }
-.text-muted { color: #666; }
-.text-center { text-align: center; }
-.text-left { text-align: left; }
-
-.hidden { display: none !important; }
-#adminDashboard.hidden { display: none !important; }
-#adminLoginSection.hidden { display: none !important; }
-
-/* Ensure transitions are smooth */
-.fade-in {
-    animation: fadeIn 0.3s ease-in-out;
-}
-.d-block { display: block; }
-.w-100 { width: 100%; }
-.mt-1 { margin-top: 1rem; }
-.mt-2 { margin-top: 2rem; }
-.mt-3 { margin-top: 3rem; }
-.mt-05 { margin-top: 0.5rem; }
-.mb-1 { margin-bottom: 1rem; }
-.mb-2 { margin-bottom: 2rem; }
-.p-1 { padding: 1rem; }
-
-.flex-between {
+.screen-container {
+    height: 100vh;
+    width: 100%;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-/* LAYOUT */
-.container {
-    max-width: 480px; /* Mobile-first constraint */
-    margin: 0 auto;
-    padding: 20px;
-}
-
-/* COMPONENTS */
-.card {
-    background: var(--white);
-    padding: 24px;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-}
-
-.logo-placeholder {
-    width: 60px;
-    height: 60px;
-    background-color: var(--primary-teal);
-    border-radius: 50%;
-    margin: 0 auto 20px;
-    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-}
-.logo-placeholder::after {
-    content: "OS";
-    color: white;
-    font-weight: bold;
-    font-size: 1.2rem;
+    padding: 20px;
+    position: relative;
+    overflow-y: auto;
 }
 
-.subtitle {
-    font-weight: 400;
-    font-size: 1.1rem;
-    margin-bottom: 1.5rem;
+.card {
+    background: var(--bg);
+    padding: 32px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 440px;
+    border: 1px solid var(--border);
+    animation: slideUp 0.4s ease-out;
 }
 
-/* FORMS */
-.form-group {
+h1, h2, h3 {
     margin-bottom: 1rem;
-    text-align: left;
+    line-height: 1.2;
 }
 
-label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    font-size: 0.9rem;
-}
+.text-teal { color: var(--primary); }
+.text-red { color: var(--secondary); }
+.text-center { text-align: center; }
+.text-muted { color: #666; font-size: 0.95rem; }
 
+.hidden { display: none !important; }
+
+/* FORMS & INPUTS */
+.form-group { margin-bottom: 1.5rem; text-align: left; }
+label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; }
 input, select, textarea {
     width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
+    padding: 14px;
+    border: 2px solid var(--border);
     border-radius: var(--radius);
     font-size: 1rem;
     outline: none;
-    transition: border-color 0.2s;
+    transition: all 0.2s;
 }
-
-input:focus, select:focus, textarea:focus {
-    border-color: var(--primary-teal);
-}
+input:focus, select:focus, textarea:focus { border-color: var(--primary); }
 
 /* BUTTONS */
 .btn {
-    display: inline-block;
-    padding: 12px 24px;
+    display: block;
+    width: 100%;
+    padding: 16px;
     border: none;
     border-radius: var(--radius);
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
+    transition: transform 0.1s, opacity 0.2s;
+    text-align: center;
     text-decoration: none;
-    transition: opacity 0.2s;
+}
+.btn:active { transform: scale(0.98); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-secondary { background: var(--secondary); color: white; }
+.btn-outline { background: transparent; border: 2px solid var(--border); color: var(--text); }
+
+/* PROGRESS */
+.progress-container {
+    width: 100%;
+    max-width: 440px;
+    margin-bottom: 2rem;
+}
+.progress-bar {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+}
+.progress-fill {
+    height: 100%;
+    background: var(--primary);
+    width: 0%;
+    transition: width 0.3s ease;
 }
 
-.btn:hover { opacity: 0.9; }
-
-.btn-teal { background-color: var(--primary-teal); color: white; width: 100%; }
-.btn-red { background-color: var(--secondary-red); color: white; }
-.btn-dark { background-color: var(--dark-text); color: white; }
-.btn-green { background-color: #25D366; color: white; } /* WhatsApp Green */
-.btn-outline { border: 1px solid #ccc; background: transparent; color: #666; }
-.btn-sm { padding: 6px 12px; font-size: 0.85rem; }
-
-/* ALERTS & ERRORS */
-.error-text {
-    color: var(--secondary-red);
-    font-size: 0.9rem;
-    margin-top: 0.5rem;
-    font-weight: 500;
-}
-
-.alert-box {
-    background-color: #fff3e0;
-    border-left: 4px solid var(--secondary-red);
-    padding: 12px;
-    margin-top: 1rem;
-}
-
-/* RESULT PAGE STYLES */
-.divider {
-    border: 0;
-    border-top: 1px solid #eee;
-    margin: 20px 0;
-}
-
-.custom-list {
-    list-style-type: none;
-    padding-left: 0;
-}
-
+/* LISTS */
+.custom-list { list-style: none; margin: 1.5rem 0; }
 .custom-list li {
+    padding-left: 28px;
+    margin-bottom: 12px;
     position: relative;
-    padding-left: 24px;
-    margin-bottom: 8px;
 }
-
 .custom-list li::before {
-    content: "•";
-    color: var(--primary-teal);
-    font-weight: bold;
+    content: "✓";
     position: absolute;
     left: 0;
-}
-
-/* CODE DISPLAY */
-.code-display {
-    font-family: monospace;
-    font-size: 1.5rem;
+    color: var(--primary);
     font-weight: bold;
-    background: #e0f2f1;
-    padding: 10px;
-    border-radius: 4px;
-    margin: 10px 0;
-    text-align: center;
-    letter-spacing: 2px;
-}
-
-/* ADMIN TABLE */
-.table-responsive {
-    overflow-x: auto;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-    font-size: 0.9rem;
-}
-
-th, td {
-    padding: 8px;
-    border-bottom: 1px solid #eee;
-}
-
-th {
-    background-color: #f9f9f9;
-    font-weight: 600;
-    color: var(--primary-teal);
 }
 
 /* ANIMATIONS */
-.fade-in {
-    animation: fadeIn 0.5s ease-in;
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
+
+.fade-in { animation: fadeIn 0.5s ease-in; }
+
+/* LOADING SCREEN */
+#loadingOverlay {
+    position: fixed;
+    inset: 0;
+    background: white;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media print { .no-print { display: none; } }

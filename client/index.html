@@ -2,115 +2,65 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Growth & Career OS - Premium Access</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Personal Growth & Career OS</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-gray">
-    <div id="mainContent" class="container text-center fade-in">
-        <div class="logo-placeholder"></div>
-        
-        <h1 class="text-dark">Personal Growth & Career OS</h1>
-        <h2 class="text-teal subtitle">Premium Access</h2>
-
-        <div id="loginView" class="card mt-2">
-            <p class="mb-1">Enter your unique access code to unlock the system.</p>
-            
+<body>
+    <div id="mainContent" class="screen-container">
+        <div id="loginView" class="card">
+            <h1 class="text-center text-teal">Career OS</h1>
+            <p class="text-center text-muted mb-2">Unlock your personalized career roadmap.</p>
             <form id="loginForm">
                 <div class="form-group">
-                    <input type="text" id="accessCode" placeholder="Enter Access Code (e.g. KSF-1234-5678)" required autocomplete="off">
+                    <label>Premium Access Code</label>
+                    <input type="text" id="accessCode" placeholder="KSF-XXXX-XXXX" required spellcheck="false">
+                    <p id="loginError" class="text-red hidden mt-1" style="font-size: 0.85rem;"></p>
                 </div>
-                <div id="loginError" class="error-text hidden">Invalid or used code.</div>
-                
-                <button type="submit" class="btn btn-teal">Unlock System</button>
+                <button type="submit" class="btn btn-primary">Unlock System</button>
             </form>
         </div>
 
-        <div id="accessVerifiedView" class="hidden">
-            <div class="card mt-2 text-left">
-                <h2 class="text-teal text-center mb-1">Welcome to Your Personal Growth & Career OS</h2>
-                <p class="text-muted text-center mb-2">This system is designed to give you clarity, direction, and a practical action plan — not generic advice.</p>
-                
-                <div class="info-section">
-                    <h3 class="text-dark mb-1">🧠 What You’ll Get Inside</h3>
-                    <ul class="custom-list">
-                        <li>A clear understanding of where you stand right now</li>
-                        <li>The best path based on your goals, skills, and risk level</li>
-                        <li>A 30-day and 90-day focused plan</li>
-                        <li>Common mistakes to avoid at your current stage</li>
-                    </ul>
-                </div>
-
-                <div class="alert-box mt-2">
-                    <p class="text-center">This experience is personalized and takes less than 3 minutes.</p>
-                </div>
-
-                <div class="mt-2">
-                    <h3 class="text-dark mb-1">⏱️ Before You Begin</h3>
-                    <p class="text-muted mb-1">Please answer honestly. There are no right or wrong answers — only what fits you.</p>
-                    <p class="text-muted mb-1">Your responses are used only to generate your personal direction report.</p>
-                </div>
-
-                <button id="startAssessmentBtn" class="btn btn-teal mt-2">➡️ Start My Personal Direction Assessment</button>
-                <p class="text-center mt-1"><small class="text-muted">This access is valid for one session only.</small></p>
-            </div>
-        </div>
-        
-        <div class="footer mt-3">
-            <small>&copy; 2026 Personal Growth OS</small>
+        <div id="accessVerifiedView" class="card hidden">
+            <h2 class="text-teal text-center">Access Verified</h2>
+            <p class="text-muted text-center mb-2">Welcome to your Personal Growth system.</p>
+            <ul class="custom-list">
+                <li>Personalized Action Plan</li>
+                <li>30 & 90 Day Milestones</li>
+                <li>Mistakes to Avoid</li>
+            </ul>
+            <button id="startAssessmentBtn" class="btn btn-primary">➡️ Start Assessment</button>
         </div>
     </div>
 
-    <!-- Hidden Admin Section for Quick Access -->
-    <div id="adminAccess" class="hidden">
-        <div class="container text-center fade-in">
-            <h1 class="text-dark">Admin Access</h1>
-            <div class="card">
-                <form id="adminLoginForm">
-                    <div class="form-group">
-                        <input type="password" id="adminSecret" placeholder="Enter Password" required>
-                    </div>
-                    <div id="adminLoginError" class="error-text hidden">Access Denied</div>
-                    <button type="submit" class="btn btn-dark">Enter Panel</button>
-                </form>
-            </div>
+    <!-- Secret Admin (Unlocked via 786786) -->
+    <div id="adminAccess" class="screen-container hidden">
+        <div class="card">
+            <h2 class="text-center">Admin Login</h2>
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <input type="password" id="adminSecret" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Enter Panel</button>
+            </form>
         </div>
     </div>
 
-    <div id="adminDashboard" class="hidden">
-        <div class="container fade-in">
-            <header class="flex-between mb-2">
-                <h2 class="text-teal">Admin Dashboard</h2>
-                <button id="logoutBtn" class="btn btn-sm btn-outline">Logout</button>
-            </header>
-            <div class="card mb-2">
-                <h3 class="text-dark mb-1">Generate Premium Code</h3>
-                <form id="generateCodeForm">
-                    <div class="form-group">
-                        <label for="attendeeName">Attendee Name</label>
-                        <input type="text" id="attendeeName" placeholder="Full Name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="attendeePhone">WhatsApp Number</label>
-                        <input type="tel" id="attendeePhone" placeholder="91XXXXXXXXXX" required>
-                    </div>
-                    <button type="submit" class="btn btn-red w-100">Generate Code</button>
-                </form>
-                <div id="generatedResult" class="mt-2 hidden p-1 border-teal rounded bg-light">
-                    <p class="text-dark"><strong>Generated Code:</strong></p>
-                    <div class="code-display text-teal" id="displayCode"></div>
-                    <a href="#" id="whatsappLink" target="_blank" class="btn btn-green mt-1 w-100">Send via WhatsApp</a>
-                </div>
+    <div id="adminDashboard" class="screen-container hidden">
+        <div class="card" style="max-width: 600px;">
+            <h3>Generate Access Code</h3>
+            <form id="generateCodeForm" class="mb-2">
+                <input type="text" id="attendeeName" placeholder="Name" required class="mb-1">
+                <input type="text" id="attendeePhone" placeholder="Phone" required class="mb-1">
+                <button type="submit" class="btn btn-secondary">Generate</button>
+            </form>
+            <div style="max-height: 200px; overflow-y: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead><tr style="text-align: left; border-bottom: 1px solid #eee;"><th>Name</th><th>Code</th><th>Status</th></tr></thead>
+                    <tbody id="attendeesTableBody"></tbody>
+                </table>
             </div>
-            <div class="card">
-                <h3 class="text-dark mb-1">Recent Attendees</h3>
-                <div class="table-responsive">
-                    <table class="w-100 text-left">
-                        <thead><tr><th>Name</th><th>Phone</th><th>Code</th><th>Status</th></tr></thead>
-                        <tbody id="attendeesTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
+            <button onclick="location.reload()" class="btn btn-outline mt-2">Exit Admin</button>
         </div>
     </div>
 
