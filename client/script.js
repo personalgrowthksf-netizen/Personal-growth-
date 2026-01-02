@@ -86,13 +86,20 @@ function initQuestions() {
     let currentIdx = 0;
     while (user.answers[questions[currentIdx]?.id]) currentIdx++;
 
+    const intro = document.getElementById('questionIntroView');
     const flow = document.getElementById('questionFlow');
     const qLabel = document.getElementById('qLabel');
     const qInputContainer = document.getElementById('qInputContainer');
     const nextBtn = document.getElementById('nextQBtn');
     const progressFill = document.getElementById('progressFill');
 
-    renderQuestion();
+    if (!intro || !flow) return;
+
+    document.getElementById('continueToFormBtn')?.addEventListener('click', () => {
+        intro.classList.add('hidden');
+        flow.classList.remove('hidden');
+        renderQuestion();
+    });
 
     nextBtn?.addEventListener('click', () => {
         const input = qInputContainer.querySelector('input, select, textarea');
