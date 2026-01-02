@@ -44,6 +44,8 @@ body {
 .text-left { text-align: left; }
 
 .hidden { display: none !important; }
+#adminDashboard.hidden { display: none !important; }
+#adminLoginSection.hidden { display: none !important; }
 .d-block { display: block; }
 .w-100 { width: 100%; }
 .mt-1 { margin-top: 1rem; }

@@ -160,7 +160,8 @@ function initAdmin() {
     });
 
     function showDashboard() {
-        loginSection.classList.add("hidden");
+        loginSection.style.display = "none";
+        dashboardSection.style.display = "block";
         dashboardSection.classList.remove("hidden");
         renderAttendeesTable();
     }
