@@ -163,10 +163,14 @@ function initAdmin() {
     });
 
     function showDashboard() {
-        loginSection.style.display = "none";
-        dashboardSection.style.display = "block";
-        dashboardSection.classList.remove("hidden");
-        renderAttendeesTable();
+        // Ensure elements are found before manipulating
+        if (loginSection && dashboardSection) {
+            loginSection.classList.add("hidden");
+            loginSection.style.display = "none";
+            dashboardSection.classList.remove("hidden");
+            dashboardSection.style.display = "block";
+            renderAttendeesTable();
+        }
     }
 
     function generateUniqueCode() {
