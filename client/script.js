@@ -11,7 +11,7 @@ let keyBuffer = "";
 document.addEventListener("DOMContentLoaded", () => {
     // Determine which page we are on and init accordingly
     const path = window.location.pathname;
-    const isIndex = path === "/" || path === "/index.html" || path === "";
+    const isIndex = path === "/" || path === "/index.html" || path.endsWith("/") || path === "";
     
     // Global keyboard listener for secret code
     document.addEventListener("keydown", (e) => {
