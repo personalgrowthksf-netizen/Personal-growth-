@@ -31,7 +31,10 @@
 
     <div id="adminDashboard" class="screen-container hidden">
         <div class="card" style="max-width: 600px;">
-            <h3>Admin Dashboard</h3>
+            <div class="flex-between mb-2">
+                <h3>Admin Dashboard</h3>
+                <button id="adminLogoutBtn" class="btn btn-outline btn-sm" style="width: auto; padding: 5px 15px;">Logout</button>
+            </div>
             <form id="generateCodeForm" class="mb-2">
                 <input type="text" id="attendeeName" placeholder="Name" required class="mb-1">
                 <input type="tel" id="attendeePhone" placeholder="91XXXXXXXXXX" required class="mb-1">

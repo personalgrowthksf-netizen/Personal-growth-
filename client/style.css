@@ -26,7 +26,10 @@ input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; bo
 .msg { margin-bottom: 8px; padding: 8px; border-radius: 6px; max-width: 85%; }
 .msg.user { background: var(--primary); color: #fff; align-self: flex-end; margin-left: auto; }
 .msg.bot { background: #eee; color: #333; }
+.btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+.btn-sm { padding: 8px; font-size: 0.85rem; }
 .flex { display: flex; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
 .gap-1 { gap: 10px; }
 .progress-bar { height: 4px; background: #eee; border-radius: 2px; margin-bottom: 20px; }
 .progress-fill { height: 100%; background: var(--primary); width: 0; transition: width 0.3s; }

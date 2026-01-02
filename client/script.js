@@ -205,6 +205,10 @@ function initAdmin() {
         }
     });
 
+    document.getElementById('adminLogoutBtn')?.addEventListener('click', () => {
+        location.reload();
+    });
+
     genForm?.addEventListener('submit', (e) => {
         e.preventDefault();
         const name = document.getElementById('attendeeName').value.trim();
