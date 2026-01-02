@@ -1,0 +1,199 @@
+You are a senior full-stack web developer.
+
+Build a COMPLETE, FULLY WORKING, ERROR-FREE web application called:
+
+“Personal Growth & Career Operating System – Premium Access”
+
+====================================================
+ABSOLUTE RULES (DO NOT BREAK)
+====================================================
+- Use ONLY HTML, CSS, and Vanilla JavaScript
+- NO frameworks, NO libraries
+- NO backend, NO server
+- NO email system
+- WhatsApp delivery ONLY
+- Use browser localStorage for all data
+- ZERO console errors
+- Clean, readable, commented code
+
+====================================================
+BRANDING & COLOR THEME (MANDATORY)
+====================================================
+Base the UI color theme on this palette:
+
+- Primary Teal: #009688
+- Secondary Red: #E53935
+- Accent Yellow: #FBC02D
+- Accent Blue: #3F51B5
+- Dark Text: #1E1E1E
+- Background: #FFFFFF
+
+Rules:
+- Buttons use Teal
+- Important actions use Red
+- Headings dark
+- Cards white with soft shadow
+- Mobile-first design
+
+====================================================
+PROJECT PURPOSE
+====================================================
+Used at a live event registration counter.
+Attendees pay offline.
+Admin generates a one-time premium access code.
+Code is sent ONLY via WhatsApp.
+Code unlocks a personal direction system.
+
+====================================================
+PROJECT STRUCTURE (REQUIRED)
+====================================================
+Create EXACTLY these files:
+
+/index.html
+/admin.html
+/questions.html
+/result.html
+/style.css
+/script.js
+
+====================================================
+SECURITY RULES
+====================================================
+- Admin panel must be hidden
+- Admin secret code = 786786
+- Admin page unlocks ONLY with this code
+- Each access code:
+  - Is unique
+  - Can be used ONLY once
+  - Cannot be reused or shared
+
+====================================================
+PAGE DETAILS
+====================================================
+
+----------------------------
+1) index.html
+----------------------------
+- Logo placeholder at top
+- Title: Personal Growth & Career OS
+- Subtitle: Premium Access
+- Input: Access Code
+- Button: Unlock (Teal)
+- Errors in Red
+- On success → questions.html
+
+----------------------------
+2) admin.html
+----------------------------
+FIRST SCREEN:
+- Input: Admin Secret Code
+- Button: Enter
+
+IF code == 786786:
+- Show admin dashboard
+
+ADMIN DASHBOARD:
+- Input fields:
+  - Attendee Name
+  - Phone Number (91XXXXXXXXXX)
+- Button: Generate Code (Red)
+
+ON GENERATE:
+- Create unique code like:
+  KSF-XXXX-XXXX
+- Save in localStorage:
+  name, phone, code, used=false
+
+- Display:
+  - Generated code
+  - WhatsApp Send Button
+
+WHATSAPP FUNCTION:
+- Open WhatsApp using wa.me
+- Prefilled message:
+
+“Hi [Name],
+Thank you for upgrading at Kerala Startup Fest.
+
+Your Premium Access Code:
+[CODE]
+
+Use this code to unlock your Personal Growth & Career OS.”
+
+ADMIN TABLE:
+- Columns:
+  Name | Phone | Code | Status (USED / UNUSED)
+
+----------------------------
+3) questions.html
+----------------------------
+Accessible ONLY after valid code.
+
+Form fields:
+- Name
+- Current Status (Student / Job Seeker / Working / Founder)
+- Primary Goal (Job / Startup / Skill / Not Sure)
+- Risk Appetite (Low / Medium / High)
+- Skill Level (Beginner / Intermediate / Advanced)
+- Biggest Challenge (textarea)
+
+Button: Generate My Direction
+
+Save answers in localStorage.
+Redirect to result.html.
+
+----------------------------
+4) result.html
+----------------------------
+Generate output using simple logic:
+
+IF goal == Startup AND risk == High
+→ Startup Fast Track
+
+IF goal == Startup AND risk != High
+→ Skill + Experience Path
+
+IF goal == Job AND skill == Beginner
+→ Skill Foundation Path
+
+IF goal == Job AND skill != Beginner
+→ Job Acceleration Path
+
+IF goal == Not Sure
+→ Exploration Path
+
+Display:
+- Path Title
+- Short explanation
+- 30-Day Focus (3 bullets)
+- 90-Day Focus (3 bullets)
+- One mistake to avoid
+
+After load:
+- Mark access code as USED
+- Lock further access
+
+====================================================
+JAVASCRIPT RULES
+====================================================
+- All JS in script.js
+- Use DOMContentLoaded
+- Use localStorage safely
+- Validate inputs
+- Prevent errors
+- Comment every section
+
+====================================================
+FINAL REQUIREMENT
+====================================================
+Return COMPLETE CODE for:
+- index.html
+- admin.html
+- questions.html
+- result.html
+- style.css
+- script.js
+
+Do NOT explain.
+Do NOT summarize.
+Return ONLY production-ready code.
