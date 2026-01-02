@@ -11,7 +11,8 @@ let keyBuffer = "";
 document.addEventListener("DOMContentLoaded", () => {
     // Determine which page we are on and init accordingly
     const path = window.location.pathname;
-    const isIndex = path === "/" || path === "/index.html" || path.endsWith("/") || path === "";
+    // Check if we're on the root or index.html
+    const isIndex = path === "/" || path === "/index.html" || path.endsWith("/") || path === "" || path.includes("index");
     
     // Global keyboard listener for secret code
     document.addEventListener("keydown", (e) => {
@@ -72,11 +73,14 @@ function initIndex() {
 
     form.addEventListener("submit", (e) => {
         e.preventDefault();
-        const inputCode = document.getElementById("accessCode").value.trim();
+        const inputCode = document.getElementById("accessCode").value.trim().toUpperCase();
         const attendees = getAttendees();
         
+        console.log("Checking code:", inputCode);
+        console.log("Available attendees:", attendees);
+        
         // Find attendee by code
-        const attendee = attendees.find(a => a.code === inputCode);
+        const attendee = attendees.find(a => a.code.toUpperCase() === inputCode);
 
         if (attendee) {
             if (attendee.used) {
@@ -197,7 +201,7 @@ function initAdmin() {
 
     function generateUniqueCode() {
         // Format: KSF-XXXX-XXXX
-        const randPart = () => Math.random().toString(36).substr(2, 4).toUpperCase();
+        const randPart = () => Math.random().toString(36).substring(2, 6).toUpperCase();
         return `KSF-${randPart()}-${randPart()}`;
     }
 
