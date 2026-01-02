@@ -9,9 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Determine which page we are on and init accordingly
     const path = window.location.pathname;
     
-    if (path.includes("admin.html")) {
+    if (path.includes("admin.html") || path.endsWith("/admin") || path.endsWith("/admin.html")) {
         initAdmin();
-    } else if (path.includes("questions.html")) {
+    } else if (path.includes("questions.html") || path.endsWith("/questions")) {
         initQuestions();
     } else if (path.includes("result.html")) {
         initResult();
