@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment - Personal Growth OS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray">
+    <div class="container fade-in">
+        <h2 class="text-teal text-center mb-2">Your Profile</h2>
+        
+        <div class="card">
+            <form id="questionsForm">
+                <!-- Name (Auto-filled if possible, but form requested it) -->
+                <div class="form-group">
+                    <label for="userName">Full Name</label>
+                    <input type="text" id="userName" required>
+                </div>
+
+                <!-- Current Status -->
+                <div class="form-group">
+                    <label for="currentStatus">Current Status</label>
+                    <select id="currentStatus" required>
+                        <option value="" disabled selected>Select...</option>
+                        <option value="Student">Student</option>
+                        <option value="Job Seeker">Job Seeker</option>
+                        <option value="Working">Working Professional</option>
+                        <option value="Founder">Founder</option>
+                    </select>
+                </div>
+
+                <!-- Primary Goal -->
+                <div class="form-group">
+                    <label for="primaryGoal">Primary Goal</label>
+                    <select id="primaryGoal" required>
+                        <option value="" disabled selected>Select...</option>
+                        <option value="Job">Get a Job / Better Job</option>
+                        <option value="Startup">Build a Startup</option>
+                        <option value="Skill">Learn a New Skill</option>
+                        <option value="Not Sure">Not Sure Yet</option>
+                    </select>
+                </div>
+
+                <!-- Risk Appetite -->
+                <div class="form-group">
+                    <label for="riskAppetite">Risk Appetite</label>
+                    <select id="riskAppetite" required>
+                        <option value="" disabled selected>Select...</option>
+                        <option value="Low">Low (Prefer Stability)</option>
+                        <option value="Medium">Medium (Calculated Risks)</option>
+                        <option value="High">High (All In)</option>
+                    </select>
+                </div>
+
+                <!-- Skill Level -->
+                <div class="form-group">
+                    <label for="skillLevel">Current Skill Level</label>
+                    <select id="skillLevel" required>
+                        <option value="" disabled selected>Select...</option>
+                        <option value="Beginner">Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Advanced">Advanced</option>
+                    </select>
+                </div>
+
+                <!-- Biggest Challenge -->
+                <div class="form-group">
+                    <label for="challenge">Biggest Challenge Right Now</label>
+                    <textarea id="challenge" rows="3" placeholder="What's holding you back?" required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-teal w-100">Generate My Direction</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

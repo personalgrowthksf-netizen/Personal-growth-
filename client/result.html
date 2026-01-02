@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Direction - Personal Growth OS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray">
+    <div class="container fade-in">
+        <h1 class="text-center text-teal mb-1">Your Personal Direction</h1>
+        <p class="text-center text-muted mb-2" id="userGreeting"></p>
+
+        <!-- Result Card -->
+        <div class="card result-card">
+            <h2 id="pathTitle" class="text-blue text-center mb-1">Loading...</h2>
+            <p id="pathDescription" class="text-center mb-2">Analyzing your profile...</p>
+
+            <hr class="divider">
+
+            <div class="plan-section">
+                <h3 class="text-red">30-Day Focus</h3>
+                <ul id="list30Day" class="custom-list">
+                    <!-- JS Populated -->
+                </ul>
+            </div>
+
+            <div class="plan-section mt-2">
+                <h3 class="text-teal">90-Day Focus</h3>
+                <ul id="list90Day" class="custom-list">
+                    <!-- JS Populated -->
+                </ul>
+            </div>
+
+            <div class="alert-box mt-2">
+                <strong class="text-red">⚠️ One Mistake to Avoid:</strong>
+                <p id="mistakeToAvoid" class="mt-05"></p>
+            </div>
+        </div>
+
+        <div class="text-center mt-3">
+            <button onclick="window.print()" class="btn btn-outline">Save this Plan</button>
+            <a href="index.html" class="btn btn-dark mt-1 d-block">Exit</a>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
