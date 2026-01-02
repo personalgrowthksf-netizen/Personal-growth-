@@ -11,6 +11,7 @@ let keyBuffer = "";
 document.addEventListener("DOMContentLoaded", () => {
     // Determine which page we are on and init accordingly
     const path = window.location.pathname;
+    const isIndex = path === "/" || path === "/index.html" || path === "";
     
     // Global keyboard listener for secret code
     document.addEventListener("keydown", (e) => {
@@ -21,8 +22,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (keyBuffer.endsWith(ADMIN_TRIGGER_CODE)) {
             keyBuffer = ""; // Reset
             console.log("Admin trigger detected!");
-            // Use absolute path to avoid subfolder issues
-            window.location.href = "/admin.html";
+            // Use window.location.assign for more forced redirection
+            window.location.assign("/admin.html");
         }
     });
 
@@ -32,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
         initQuestions();
     } else if (path.includes("result.html")) {
         initResult();
-    } else {
+    } else if (isIndex) {
         // Default to index (login) if no specific match
         initIndex();
     }
